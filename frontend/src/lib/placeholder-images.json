@@ -1,0 +1,64 @@
+{
+  "placeholderImages": [
+    {
+      "id": "parallax-bg",
+      "description": "A beautiful, wide shot of the Ranir Bazar High School campus.",
+      "imageUrl": "https://images.unsplash.com/photo-1706078352329-977b4cb3f889?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzY2hvb2wlMjBjYW1wdXN8ZW58MHx8fHwxNzYxMjI1NTI2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "school campus"
+    },
+    {
+      "id": "our-story",
+      "description": "An old, nostalgic photo of the Ranir Bazar High School building.",
+      "imageUrl": "https://res.cloudinary.com/dzgs1uhn0/image/upload/v1762191804/rbmb-story_oje7kr.jpg",
+      "imageHint": "old school"
+    },
+    {
+      "id": "instruction-video-thumb",
+      "description": "Thumbnail for the registration instruction video, showing a play button.",
+      "imageUrl": "https://images.unsplash.com/photo-1694878981885-7647baf0d957?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx2aWRlbyUyMHBsYXl8ZW58MHx8fHwxNzYxMjMwOTQ5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "video play"
+    },
+    {
+      "id": "gift-section",
+      "description": "An elegantly wrapped gift box for the reunion.",
+      "imageUrl": "https://images.unsplash.com/photo-1647221598398-934ed5cb0e4f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxnaWZ0JTIwYm94fGVufDB8fHx8MTc2MTIyODQwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gift box"
+    },
+    {
+      "id": "food-section",
+      "description": "A delicious spread of catering food for an event.",
+      "imageUrl": "https://images.unsplash.com/photo-1700625914525-54dba25d2125?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjYXRlcmluZyUyMGZvb2R8ZW58MHx8fHwxNzYxMjEwOTk2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "catering food"
+    },
+    {
+      "id": "cultural-section",
+      "description": "An illustration of children enjoying autumn hobbies.",
+      "imageUrl": "https://img.freepik.com/free-vector/beautiful-illustration-autumn-children-hobbies_52683-71558.jpg?semt=ais_hybrid&w=740&q=80",
+      "imageHint": "children illustration"
+    },
+    {
+      "id": "venue-image",
+      "description": "A map showing the location of the event.",
+      "imageUrl": "https://res.cloudinary.com/dzgs1uhn0/image/upload/v1762191905/ampus_gisebw.png",
+      "imageHint": "event map"
+    },
+    {
+      "id": "gift-mug",
+      "description": "A custom printed mug for the school reunion.",
+      "imageUrl": "https://images.unsplash.com/photo-1614833193447-427b75eee2f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjdXN0b20lMjBtdWd8ZW58MHx8fHwxNzYxMzE0OTM4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "custom mug"
+    },
+    {
+      "id": "gift-tshirt",
+      "description": "A t-shirt with the alumni reunion logo.",
+      "imageUrl": "https://www.thenewstore.nyc/cdn/shop/files/tns_champion_tns_alumni_gray.png?v=1750757197&width=1946",
+      "imageHint": "alumni t-shirt"
+    },
+    {
+      "id": "gift-magazine",
+      "description": "A school magazine cover.",
+      "imageUrl": "https://img.freepik.com/free-psd/school-magazine-cover-template-design_23-2151955393.jpg",
+      "imageHint": "school magazine"
+    }
+  ]
+}

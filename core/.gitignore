@@ -1,0 +1,66 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.sqlite3
+*.log
+
+# Environment
+env/
+venv/
+ENV/
+.env
+.env.*
+
+# Django
+core/__pycache__/
+core/*.sqlite3
+core/*.log
+db.sqlite3
+media/
+__pycache__/
+# Cloudinary local files (if any)
+*.upload
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Byte-compiled / cache
+*.py[cod]
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# Node.js (if you have frontend in project)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Pytest / coverage
+.coverage
+.tox/
+.pytest_cache/
+
+# Django migrations (optional: if you want to ignore them)
+# **/migrations/
+# keep migration and its __init__.py but ignore others
+# Django migrations (keep __init__.py)
+**/migrations/*.py
+!**/migrations/__init__.py
+**/migrations/*.pyc
+.env
+
