@@ -36,16 +36,13 @@ import { Switch } from '@/components/ui/switch';
 const registerFormSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
-  profile_image: z.any().refine(file => file, 'Profile image is required.'),
-  bloodGroup: z.string().optional(),
-  phone: z.string().optional(),
+  profile_image: z.any().optional(),
+  phone: z.string().min(11, { message: 'Please enter a valid phone number.' }),
   profession: z.string().min(2, { message: 'Profession is required.' }),
-  batch: z.coerce.number().int().min(1989, 'Batch year must be 1989 or later.').max(2026, 'Batch year must be 2026 or earlier.'),
+  batch: z.coerce.number().int().min(1998, 'Batch year must be 1998 or later.').max(2026, 'Batch year must be 2026 or earlier.'),
   subject: z.enum(['science', 'commerce', 'humanities', 'none'], { required_error: 'Please select your subject.' }),
   religion: z.string().optional(),
   gender: z.enum(['male', 'female', 'other'], { required_error: 'Please select a gender.' }),
-  t_shirt_size: z.enum(['S', 'M', 'L', 'XL', 'XXL'], { required_error: 'Please select your T-shirt size.' }),
-  is_guest: z.boolean().optional().default(false),
   add_my_image_to_magazine: z.boolean().optional().default(false),
   agree: z.boolean().refine((val) => val === true, {
     message: 'You must agree to the terms.',
@@ -54,15 +51,7 @@ const registerFormSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
-const tshirtSizes = [
-    { size: 'S', chest: '38"', length: '27"' },
-    { size: 'M', chest: '40"', length: '28"' },
-    { size: 'L', chest: '42"', length: '29"' },
-    { size: 'XL', chest: '44"', length: '30"' },
-    { size: 'XXL', chest: '46"', length: '31"' },
-];
-
-const batchYears = Array.from({ length: 2026 - 1989 + 1 }, (_, i) => String(1989 + i)).reverse();
+const batchYears = Array.from({ length: 2025 - 1998 + 1 }, (_, i) => String(1998 + i)).reverse();
 
 
 export default function RegisterForm() {
@@ -75,8 +64,7 @@ export default function RegisterForm() {
     resolver: zodResolver(registerFormSchema),
     mode: 'onChange',
     defaultValues: {
-        is_guest: false,
-        add_my_image_to_magazine: false,
+      add_my_image_to_magazine: false,
     }
   });
 
@@ -94,47 +82,47 @@ export default function RegisterForm() {
 
   async function onSubmit(data: RegisterFormValues) {
     setIsLoading(true);
-    
+
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
-        if (key === 'is_guest' || key === 'add_my_image_to_magazine') {
-            formData.append(key, String(value));
-        } else if (value) {
-            formData.append(key, value);
-        }
+      if (key === 'add_my_image_to_magazine') {
+        formData.append(key, String(value));
+      } else if (value) {
+        formData.append(key, value);
+      }
     });
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/accounts/register/`, {
-            method: 'POST',
-            body: formData,
-        });
+      const response = await fetch(`${API_BASE_URL}/api/accounts/register/`, {
+        method: 'POST',
+        body: formData,
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (response.ok) {
-            toast({
-                title: 'Registration Successful',
-                description: "You can now log in with your credentials.",
-            });
-            router.push('/login');
-        } else {
-            // Handle specific field errors from the API
-            const errorMessages = Object.entries(result).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
-            toast({
-                variant: 'destructive',
-                title: 'Registration Failed',
-                description: errorMessages || 'An unexpected error occurred. Please try again.',
-            });
-        }
-    } catch (error) {
+      if (response.ok) {
         toast({
-            variant: 'destructive',
-            title: 'Uh oh! Something went wrong.',
-            description: 'There was a problem with your request. Please check your connection.',
+          title: 'Registration Successful',
+          description: "You can now log in with your credentials.",
         });
+        router.push('/login');
+      } else {
+        // Handle specific field errors from the API
+        const errorMessages = Object.entries(result).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
+        toast({
+          variant: 'destructive',
+          title: 'Registration Failed',
+          description: errorMessages || 'An unexpected error occurred. Please try again.',
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request. Please check your connection.',
+      });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -165,7 +153,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -195,35 +183,20 @@ export default function RegisterForm() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-           <FormField
-            control={form.control}
-            name="bloodGroup"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Blood Group</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., O+" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" placeholder="••••••••" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -232,38 +205,38 @@ export default function RegisterForm() {
               <FormItem>
                 <FormLabel>Batch Year</FormLabel>
                 <Select onValueChange={(value) => field.onChange(Number(value))} defaultValue={String(field.value)}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your batch" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                        {batchYears.map((year) => (
-                            <SelectItem key={year} value={year}>
-                                {year}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your batch" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {batchYears.map((year) => (
+                      <SelectItem key={year} value={year}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="profession"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Profession</FormLabel>
                 <FormControl>
-                    <Input placeholder="e.g., Software Engineer" {...field} />
+                  <Input placeholder="e.g., Software Engineer" {...field} />
                 </FormControl>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
+          />
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
@@ -332,90 +305,30 @@ export default function RegisterForm() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="religion"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Religion</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your religion" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="islam">Islam</SelectItem>
-                      <SelectItem value="hinduism">Hinduism</SelectItem>
-                      <SelectItem value="buddhism">Buddhism</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="t_shirt_size"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center justify-between">
-                    <FormLabel>T-Shirt Size</FormLabel>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button variant="link" size="sm" className="p-0 h-auto text-xs">
-                                <Ruler className="mr-1 h-3 w-3"/>
-                                View Size Guide
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>T-Shirt Size Guide</DialogTitle>
-                                <DialogDescription>All measurements are in inches.</DialogDescription>
-                            </DialogHeader>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Size</TableHead>
-                                        <TableHead>Chest</TableHead>
-                                        <TableHead>Length</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {tshirtSizes.map((s) => (
-                                        <TableRow key={s.size}>
-                                            <TableCell className="font-medium">{s.size}</TableCell>
-                                            <TableCell>{s.chest}</TableCell>
-                                            <TableCell>{s.length}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </DialogContent>
-                    </Dialog>
-                  </div>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your size" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="S">S (Small)</SelectItem>
-                      <SelectItem value="M">M (Medium)</SelectItem>
-                      <SelectItem value="L">L (Large)</SelectItem>
-                      <SelectItem value="XL">XL (Extra Large)</SelectItem>
-                      <SelectItem value="XXL">XXL (Double Extra Large)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-        </div>
-        
+        <FormField
+          control={form.control}
+          name="religion"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Religion</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your religion" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="islam">Islam</SelectItem>
+                  <SelectItem value="hinduism">Hinduism</SelectItem>
+                  <SelectItem value="buddhism">Buddhism</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="add_my_image_to_magazine"
