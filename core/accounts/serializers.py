@@ -15,7 +15,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['phone','password','name','batch','profession','add_my_image_to_magazine','bloodGroup','subject','t_shirt_size','is_guest','religion','gender','profile_image']
+        fields = ['phone','password','name','batch','profession','add_my_image_to_magazine','subject','religion','gender','profile_image']
 
     def create(self, validated_data):
         profile_image = validated_data.pop('profile_image', None)

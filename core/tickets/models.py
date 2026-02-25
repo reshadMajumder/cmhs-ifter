@@ -5,7 +5,7 @@ from accounts.models import User
 class Ticket(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
-    gift_received = models.BooleanField(default=False)
+    # gift_received = models.BooleanField(default=False)
     food_received = models.BooleanField(default=False)
     has_donation = models.BooleanField(default=False)
     ticket_code = models.CharField(max_length=5, unique=True, editable=False,null=True)

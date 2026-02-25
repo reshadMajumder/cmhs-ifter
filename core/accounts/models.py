@@ -22,21 +22,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     GENDER_CHOICES = [('male','Male'),('female','Female'),('other','Other')]
     RELIGION_CHOICES = [('islam','Islam'),('hinduism','Hinduism'),('christianity','Christianity'),('buddhism','Buddhism'),('other','Other')]
     TSHIRT_SIZE_CHOICES = [('S','S'),('M','M'),('L','L'),('XL','XL'),('XXL','XXL')]
-    BATCH_CHOICES = [(str(year), str(year)) for year in range(1989, 2028)]
+    BATCH_CHOICES = [(str(year), str(year)) for year in range(1998, 2026)]
 
 
     phone = models.CharField(max_length=15, unique=True)
     name = models.CharField(max_length=255,null=True,blank=True)
     batch= models.CharField(max_length=255,choices=BATCH_CHOICES,null=True,blank=True)
     profession =models.CharField(max_length=255,null=True,blank=True)
-    bloodGroup =models.CharField(max_length=10,null=True,blank=True)
+    # bloodGroup =models.CharField(max_length=10,null=True,blank=True)
     subject = models.CharField(max_length=255,null=True,blank=True)
-    t_shirt_size = models.CharField(max_length=5, choices=TSHIRT_SIZE_CHOICES, null=True, blank=True)
+    # t_shirt_size = models.CharField(max_length=5, choices=TSHIRT_SIZE_CHOICES, null=True, blank=True)
     religion = models.CharField(max_length=20, choices=RELIGION_CHOICES, null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, null=True, blank=True)
     profile_image = CloudinaryField('image', blank=True, null=True)
-    is_guest = models.BooleanField(default=False)
-    add_my_image_to_magazine=models.BooleanField(default=True)
+    # is_guest = models.BooleanField(default=False)
+    add_my_image_to_magazine=models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
