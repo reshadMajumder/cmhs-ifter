@@ -75,7 +75,7 @@ export default function ContactSection() {
                                                 </a>
                                             </div>
                                             <div className="flex flex-col border-t border-border/30 pt-2 mt-2">
-                                                <span className="text-xs text-muted-foreground">Website Support</span>
+                                                <span className="text-sm font-semibold text-primary">Reshad (Website support)</span>
                                                 <a href="tel:+8801627076527" className="text-muted-foreground hover:text-primary transition-colors">
                                                     +8801627076527
                                                 </a>
