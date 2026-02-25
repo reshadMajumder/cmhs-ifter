@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ["*" ]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -189,14 +189,14 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.AnonRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'user': '200/min',
-        'anon': '100/min',
+        'user': '100/min',
+        'anon': '50/min',
     },
 }
 
 # JWT Settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -207,10 +207,10 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'accounts.User'
 
 JAZZMIN_SETTINGS = {
-    "site_title": "RBMB Reunion Admin",
-    "site_header": "RBMB Reunion",
-    "site_brand": "RBMB Reunion",
-    "welcome_sign": "Welcome to RBMB Reunion Admin",
+    "site_title": "CMHS IFTER Admin",
+    "site_header": "CMHS IFTER",
+    "site_brand": "CMHS IFTER",
+    "welcome_sign": "Welcome to CMHS IFTER Admin",
     
     # Custom CSS and JS for dashboard
     "custom_css": None,
