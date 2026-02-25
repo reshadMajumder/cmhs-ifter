@@ -13,7 +13,7 @@ export default function Instructions() {
           <CardContent className="p-4">
             <div className="aspect-video bg-black rounded-lg overflow-hidden relative">
               <iframe
-                src="https://www.youtube.com/embed/QFJd8tWNYag"
+                src="https://www.youtube.com/embed/gFCgXzl8bzo"
                 title="YouTube video player"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
