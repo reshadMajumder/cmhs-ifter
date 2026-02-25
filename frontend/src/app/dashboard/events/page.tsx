@@ -1,10 +1,9 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import TicketCard from "./_components/ticket-card";
 import { Button } from "@/components/ui/button";
-import { Download, Ticket } from "lucide-react";
+import { Download } from "lucide-react";
 import { fetchWithAuth } from '@/lib/api';
 import { API_BASE_URL } from '@/lib/constants';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -24,6 +23,168 @@ interface TicketData {
     has_donation: boolean;
     food_received: boolean;
 }
+
+type CaptureMode = 'normal' | 'strip-url-layers' | 'aggressive';
+
+const splitBackgroundLayers = (value: string): string[] => {
+    const layers: string[] = [];
+    let current = '';
+    let depth = 0;
+
+    for (const char of value) {
+        if (char === '(') depth++;
+        if (char === ')' && depth > 0) depth--;
+
+        if (char === ',' && depth === 0) {
+            if (current.trim()) layers.push(current.trim());
+            current = '';
+            continue;
+        }
+
+        current += char;
+    }
+
+    if (current.trim()) layers.push(current.trim());
+    return layers;
+};
+
+const stripUrlBackgroundLayers = (backgroundImage: string): string => {
+    if (backgroundImage === 'none') return backgroundImage;
+
+    const safeLayers = splitBackgroundLayers(backgroundImage).filter((layer) => !layer.trim().toLowerCase().startsWith('url('));
+    return safeLayers.length > 0 ? safeLayers.join(', ') : 'none';
+};
+
+const waitForTicketImages = async (root: HTMLElement): Promise<void> => {
+    const images = Array.from(root.querySelectorAll<HTMLImageElement>('img'));
+
+    await Promise.all(
+        images.map(
+            (img) =>
+                new Promise<void>((resolve) => {
+                    if (img.complete && img.naturalWidth > 0 && img.naturalHeight > 0) {
+                        resolve();
+                        return;
+                    }
+
+                    let settled = false;
+                    const finish = () => {
+                        if (settled) return;
+                        settled = true;
+                        img.removeEventListener('load', finish);
+                        img.removeEventListener('error', finish);
+                        resolve();
+                    };
+
+                    img.addEventListener('load', finish, { once: true });
+                    img.addEventListener('error', finish, { once: true });
+
+                    if (img.loading === 'lazy') {
+                        img.loading = 'eager';
+                    }
+
+                    if (typeof img.decode === 'function') {
+                        img.decode().then(finish).catch(() => { /* no-op */ });
+                    }
+
+                    window.setTimeout(finish, 3000);
+                })
+        )
+    );
+};
+
+const isCanvasVisuallyValid = (canvas: HTMLCanvasElement): boolean => {
+    const { width, height } = canvas;
+    if (width <= 0 || height <= 0) return false;
+
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return false;
+
+    try {
+        const data = ctx.getImageData(0, 0, width, height).data;
+        const maxSamples = 1600;
+        const step = Math.max(1, Math.floor((width * height) / maxSamples));
+
+        let visiblePixels = 0;
+        let variedPixels = 0;
+        let base: [number, number, number, number] | null = null;
+
+        for (let i = 0; i < width * height; i += step) {
+            const offset = i * 4;
+            const r = data[offset];
+            const g = data[offset + 1];
+            const b = data[offset + 2];
+            const a = data[offset + 3];
+
+            if (a > 8) visiblePixels++;
+
+            if (!base) {
+                base = [r, g, b, a];
+                continue;
+            }
+
+            if (
+                Math.abs(r - base[0]) > 6 ||
+                Math.abs(g - base[1]) > 6 ||
+                Math.abs(b - base[2]) > 6 ||
+                Math.abs(a - base[3]) > 6
+            ) {
+                variedPixels++;
+            }
+        }
+
+        return visiblePixels > 40 && variedPixels > 20;
+    } catch {
+        return true;
+    }
+};
+
+const sanitizeClonedTicket = (clonedDoc: Document, mode: CaptureMode) => {
+    const ticketRoot = clonedDoc.querySelector<HTMLElement>('[data-ticket-capture-root="true"]');
+    const win = clonedDoc.defaultView;
+    if (!ticketRoot || !win) return;
+
+    if (mode === 'aggressive') {
+        const style = clonedDoc.createElement('style');
+        style.textContent = `
+            [data-ticket-capture-root="true"] *,
+            [data-ticket-capture-root="true"] *::before,
+            [data-ticket-capture-root="true"] *::after {
+                -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+                background-image: none !important;
+            }
+        `;
+        clonedDoc.head.appendChild(style);
+        ticketRoot.style.backgroundColor = '#2d1b4e';
+    }
+
+    const elements = [ticketRoot, ...Array.from(ticketRoot.querySelectorAll<HTMLElement>('*'))];
+    elements.forEach((el) => {
+        el.style.backdropFilter = 'none';
+        (el.style as any).webkitBackdropFilter = 'none';
+
+        if (mode === 'aggressive') {
+            el.style.backgroundImage = 'none';
+            return;
+        }
+
+        if (mode === 'strip-url-layers') {
+            const backgroundImage = win.getComputedStyle(el).backgroundImage;
+            if (backgroundImage !== 'none' && backgroundImage.includes('url(')) {
+                el.style.backgroundImage = stripUrlBackgroundLayers(backgroundImage);
+            }
+        }
+    });
+
+    if (mode === 'normal') return;
+
+    ticketRoot.querySelectorAll<HTMLCanvasElement>('canvas').forEach((canvas) => {
+        if (canvas.width === 0 || canvas.height === 0) {
+            canvas.remove();
+        }
+    });
+};
 
 export default function EventsPage() {
     const [ticketData, setTicketData] = useState<TicketData | null>(null);
@@ -56,43 +217,49 @@ export default function EventsPage() {
     const handleDownload = async () => {
         if (!ticketRef.current) return;
 
-        // Pre-load all images inside the ticket so html2canvas never encounters a 0×0 canvas
-        const imgEls = Array.from(ticketRef.current.querySelectorAll<HTMLImageElement>('img'));
-        await Promise.all(
-            imgEls.map(
-                (img) =>
-                    new Promise<void>((resolve) => {
-                        if (img.complete && img.naturalWidth > 0) {
-                            resolve();
-                        } else {
-                            img.onload = () => resolve();
-                            img.onerror = () => resolve(); // don't block on error
-                        }
-                    })
-            )
-        );
-
-        html2canvas(ticketRef.current, {
-            useCORS: true,
-            allowTaint: false,
-            backgroundColor: null,
-            scale: 2,
-            logging: false,
-            imageTimeout: 15000,
-            onclone: (clonedDoc) => {
-                clonedDoc.querySelectorAll<HTMLElement>('*').forEach((el) => {
-                    el.style.backdropFilter = 'none';
-                    el.style.webkitBackdropFilter = 'none';
+        try {
+            const createCanvas = async (mode: CaptureMode) =>
+                html2canvas(ticketRef.current!, {
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: mode === 'aggressive' ? '#2d1b4e' : null,
+                    scale: 2,
+                    logging: false,
+                    imageTimeout: 15000,
+                    ignoreElements: (element) =>
+                        element instanceof HTMLCanvasElement && (element.width === 0 || element.height === 0),
+                    onclone: (clonedDoc) => sanitizeClonedTicket(clonedDoc, mode),
                 });
+
+            const triggerDownload = (canvas: HTMLCanvasElement) => {
+                const link = document.createElement('a');
+                link.download = 'reunion-ticket.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            };
+
+            await waitForTicketImages(ticketRef.current);
+
+            const modes: CaptureMode[] = ['normal', 'strip-url-layers', 'aggressive'];
+            let lastError: unknown;
+
+            for (const mode of modes) {
+                try {
+                    const canvas = await createCanvas(mode);
+                    if (!isCanvasVisuallyValid(canvas)) {
+                        throw new Error(`Canvas output is blank in mode "${mode}"`);
+                    }
+                    triggerDownload(canvas);
+                    return;
+                } catch (err) {
+                    lastError = err;
+                }
             }
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'reunion-ticket.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }).catch(err => {
+
+            console.error('Ticket download failed:', lastError);
+        } catch (err) {
             console.error('Ticket download failed:', err);
-        });
+        }
     };
 
     const getTicketTypeForCard = (batchStr: string) => {

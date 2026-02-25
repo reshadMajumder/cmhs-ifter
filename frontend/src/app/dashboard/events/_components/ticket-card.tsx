@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Logo } from '@/components/logo';
 import { QRCodeSVG } from 'qrcode.react';
 import { Users, Baby, Star, Sparkles } from 'lucide-react';
@@ -122,7 +122,11 @@ const TicketCard = React.forwardRef<HTMLDivElement, TicketCardProps>(({
 
   return (
     <div className="w-full overflow-x-auto">
-    <Card ref={ref} className={cn("w-[900px] h-[400px] mx-auto shadow-2xl rounded-2xl overflow-hidden font-sans bg-gradient-to-br relative border-none shrink-0", styles.bg)}>
+    <Card
+      ref={ref}
+      data-ticket-capture-root="true"
+      className={cn("w-[900px] h-[400px] mx-auto shadow-2xl rounded-2xl overflow-hidden font-sans bg-gradient-to-br relative border-none shrink-0", styles.bg)}
+    >
       {/* Background Layers */}
       <div className="absolute inset-0 z-0">
         {/* Background Image */}
