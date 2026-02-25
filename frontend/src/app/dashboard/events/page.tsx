@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
 interface User {
     name: string;
     batch: string;
+    phone: string;
 }
 
 interface TicketData {
@@ -52,18 +53,46 @@ export default function EventsPage() {
         fetchTicket();
     }, []);
 
-    const handleDownload = () => {
-        if (ticketRef.current) {
-            html2canvas(ticketRef.current, {
-                useCORS: true,
-                backgroundColor: null // Make background transparent
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'reunion-ticket.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        }
+    const handleDownload = async () => {
+        if (!ticketRef.current) return;
+
+        // Pre-load all images inside the ticket so html2canvas never encounters a 0×0 canvas
+        const imgEls = Array.from(ticketRef.current.querySelectorAll<HTMLImageElement>('img'));
+        await Promise.all(
+            imgEls.map(
+                (img) =>
+                    new Promise<void>((resolve) => {
+                        if (img.complete && img.naturalWidth > 0) {
+                            resolve();
+                        } else {
+                            img.onload = () => resolve();
+                            img.onerror = () => resolve(); // don't block on error
+                        }
+                    })
+            )
+        );
+
+        html2canvas(ticketRef.current, {
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: null,
+            scale: 2,
+            logging: false,
+            imageTimeout: 15000,
+            onclone: (clonedDoc) => {
+                clonedDoc.querySelectorAll<HTMLElement>('*').forEach((el) => {
+                    el.style.backdropFilter = 'none';
+                    el.style.webkitBackdropFilter = 'none';
+                });
+            }
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'reunion-ticket.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            console.error('Ticket download failed:', err);
+        });
     };
 
     const getTicketTypeForCard = (batchStr: string) => {
@@ -106,6 +135,8 @@ export default function EventsPage() {
                             ticketType={getTicketTypeForCard(ticketData.user.batch)}
                             secretCode={ticketData.ticket_code}
                             isDonator={ticketData.has_donation}
+                            phone={ticketData.user.phone}
+                            batch={ticketData.user.batch}
                         />
                     </div>
                     <div className="text-center mt-6">

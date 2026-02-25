@@ -7,6 +7,7 @@ import { API_BASE_URL } from '@/lib/constants';
 import type { ProfileFormValues } from './profile/_components/profile-form';
 import { Skeleton } from '@/components/ui/skeleton';
 import PaymentStatus from './_components/payment-status';
+import UserProfile from './_components/user-profile';
 import TransactionHistory from './donate/_components/transaction-history';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LayoutDashboard } from 'lucide-react';
@@ -93,22 +94,34 @@ export default function DashboardPage() {
               <PaymentStatus payments={payments} profile={profileData} />
             </div>
 
-            {/* Event & Registration Details */}
+            {/* Person & Event Details */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {profileData && <UserProfile user={profileData} />}
               <EventStatus />
-              {/* Optional: Small Info Card or Quick Links */}
-              <div className="p-6 bg-card rounded-xl border shadow-sm flex flex-col justify-center">
-                <h3 className="font-bold text-lg mb-2">Need Help?</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Having trouble with registration or payment? Contact our support team.
-                </p>
-                <div className="flex gap-4">
-                  <a href="tel:+8801627076527" className="text-primary text-sm font-bold hover:underline">
-                    Call Support
-                  </a>
-                  <a href="/contact" className="text-primary text-sm font-bold hover:underline">
-                    Contact Us
-                  </a>
+            </div>
+
+            {/* Support Info Card */}
+            <div className="p-6 bg-card rounded-xl border shadow-sm border-dashed border-primary/20">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-bold text-lg mb-1">Need Support?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Having trouble with registration or payment? Contact our team.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-primary uppercase">Mitul</span>
+                    <a href="tel:+8801719454545" className="text-sm font-semibold hover:underline">01719454545</a>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-primary uppercase">Shad</span>
+                    <a href="tel:+8801401165474" className="text-sm font-semibold hover:underline">01401165474</a>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-primary uppercase">Rohan</span>
+                    <a href="tel:+8801754658253" className="text-sm font-semibold hover:underline">01754658253</a>
+                  </div>
                 </div>
               </div>
             </div>

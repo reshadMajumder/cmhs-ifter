@@ -4,8 +4,8 @@
 import * as React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Logo } from '@/components/logo';
-import QRCode from 'qrcode.react';
-import { Users, Baby, Star } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import { Users, Baby, Star, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type TicketType = 'Modern CMHSIAN' | 'Vintage CMHSIAN' | 'Premium';
@@ -15,102 +15,293 @@ interface TicketCardProps {
   ticketType: TicketType;
   secretCode: string;
   isDonator: boolean;
+  phone?: string;
+  batch?: string;
 }
 
-const ticketStyles: Record<TicketType, { bg: string, text: string, badge: string, headline: string }> = {
+const ticketStyles: Record<TicketType, {
+  bg: string,
+  text: string,
+  badge: string,
+  headline: string,
+  secondary: string,
+  accent: string,
+  border: string
+}> = {
   'Modern CMHSIAN': {
-    bg: 'from-cyan-800 via-teal-800 to-green-800',
+    bg: 'from-[#2d1b4e] via-[#5d3a7a] to-[#2d1b4e]',
     text: 'text-white',
-    badge: 'bg-cyan-500 text-white',
-    headline: 'font-bold font-headline'
+    badge: 'bg-gradient-to-r from-sky-200 to-blue-300 text-blue-900',
+    headline: 'font-bold font-headline text-sky-100',
+    secondary: 'text-blue-100',
+    accent: 'border-sky-200/40',
+    border: 'from-sky-200/30 via-blue-300/50 to-sky-200/30'
   },
   'Vintage CMHSIAN': {
-    bg: 'from-purple-900 via-indigo-800 to-purple-900',
+    bg: 'from-[#2d1b4e] via-[#5d3a7a] to-[#2d1b4e]',
     text: 'text-white',
-    badge: 'bg-purple-400 text-purple-900',
-    headline: 'font-bold font-headline'
+    badge: 'bg-gradient-to-r from-sky-200 to-blue-300 text-blue-900',
+    headline: 'font-bold font-headline text-sky-100',
+    secondary: 'text-blue-100',
+    accent: 'border-sky-200/40',
+    border: 'from-sky-200/30 via-blue-300/50 to-sky-200/30'
   },
   'Premium': {
-    bg: 'from-black via-gray-900 to-amber-900',
-    text: 'text-amber-100',
-    badge: 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black',
-    headline: 'font-headline font-bold text-yellow-300'
+    bg: 'from-[#2d1b4e] via-[#5d3a7a] to-[#2d1b4e]',
+    text: 'text-white',
+    badge: 'bg-gradient-to-r from-sky-200 via-blue-300 to-sky-300 text-blue-900',
+    headline: 'font-headline font-bold text-sky-100',
+    secondary: 'text-blue-100',
+    accent: 'border-sky-200/40',
+    border: 'from-sky-200/30 via-blue-300/50 to-sky-200/30'
   }
 };
+
+// Islamic Geometric Pattern SVG Component — uses only inline paths (no <pattern>) for html2canvas compatibility
+const IslamicPattern = ({ className }: { className?: string }) => {
+  const diamonds: React.ReactNode[] = [];
+  const cols = 12;
+  const rows = 6;
+  const w = 80;
+  const h = 80;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cx = c * w + 40;
+      const cy = r * h + 40;
+      diamonds.push(
+        <path
+          key={`d-${r}-${c}`}
+          d={`M${cx} ${cy - 20} L${cx + 20} ${cy} L${cx} ${cy + 20} L${cx - 20} ${cy} Z`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.3"
+          opacity="0.08"
+        />
+      );
+      diamonds.push(
+        <circle
+          key={`c-${r}-${c}`}
+          cx={cx}
+          cy={cy}
+          r="6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.3"
+          opacity="0.05"
+        />
+      );
+    }
+  }
+  return (
+    <svg className={className} viewBox="0 0 960 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      {diamonds}
+    </svg>
+  );
+};
+
+// Mihrab (Arch) SVG Component
+
+// Mihrab (Arch) SVG Component
+const MihrabArch = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 100 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 150V60C0 30 25 5 50 0C75 5 100 30 100 60V150" stroke="currentColor" strokeWidth="0.5" opacity="0.15" />
+    <path d="M5 150V62C5 35 28 8 50 4C72 8 95 35 95 62V150" stroke="currentColor" strokeWidth="0.2" opacity="0.1" />
+  </svg>
+);
 
 const TicketCard = React.forwardRef<HTMLDivElement, TicketCardProps>(({
   alumniName,
   ticketType,
   secretCode,
   isDonator,
+  phone,
+  batch,
 }, ref) => {
   const finalTicketType = isDonator ? 'Premium' : ticketType;
   const styles = ticketStyles[finalTicketType];
 
   return (
-    <Card ref={ref} className={cn("w-full max-w-4xl mx-auto shadow-2xl rounded-2xl overflow-hidden font-sans bg-gradient-to-br", styles.bg)}>
-      <div className="flex flex-col md:flex-row">
-        {/* Left Side - Event Info */}
-        <div className={cn("w-full md:w-2/3 p-6 md:p-8 relative flex flex-col justify-between", styles.text)}>
-          <div className="absolute inset-0 z-0 opacity-10">
-            <Logo className="w-full h-full" />
-          </div>
-          <div className="relative z-10">
-            <p className="text-sm font-light tracking-widest uppercase opacity-80">CMHS Association Presents</p>
-            <h2 className={cn("text-5xl md:text-6xl mt-2", styles.headline)}>
-              Grand Iftar Mahfil 2026
-            </h2>
-          </div>
-          <div className="relative z-10 mt-8 md:mt-0">
-            <div className="bg-black/20 backdrop-blur-sm p-4 rounded-lg flex flex-col sm:flex-row justify-between gap-4 text-center">
-              <div>
-                <p className="font-bold text-lg">Mar 18, 2026</p>
-                <p className="text-xs opacity-70">Date</p>
-              </div>
-              <div>
-                <p className="font-bold text-lg">03:00 PM</p>
-                <p className="text-xs opacity-70">Time</p>
-              </div>
-              <div>
-                <p className="font-bold text-lg">CMHS Campus</p>
-                <p className="text-xs opacity-70">Venue</p>
-              </div>
+    <div className="w-full overflow-x-auto">
+    <Card ref={ref} className={cn("w-[900px] h-[400px] mx-auto shadow-2xl rounded-2xl overflow-hidden font-sans bg-gradient-to-br relative border-none shrink-0", styles.bg)}>
+      {/* Background Layers */}
+      <div className="absolute inset-0 z-0">
+        {/* Background Image */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/bg.png"
+          alt=""
+          aria-hidden="true"
+          crossOrigin="anonymous"
+          className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
+        />
+
+        {/* Islamic Pattern Overlay */}
+        <div className="absolute inset-0 opacity-100">
+          <IslamicPattern className={cn("w-full h-full", styles.text)} />
+        </div>
+
+        {/* Decorative Mihrab Arches */}
+        <div className="absolute inset-0 flex justify-around items-end px-12 opacity-40">
+          <MihrabArch className={cn("h-[90%] w-auto", styles.text)} />
+          <MihrabArch className={cn("h-[90%] w-auto", styles.text)} />
+        </div>
+
+        {/* Gradient Overlays for depth and readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-transparent to-pink-900/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20" />
+      </div>
+
+      {/* Decorative Lanterns at Top */}
+      <div className="absolute top-0 left-0 right-0 z-[3] pointer-events-none overflow-hidden h-24">
+        {/* Repeat lantern image 5× side by side instead of CSS background-repeat (html2canvas incompatible) */}
+        <div className="absolute top-[-15px] left-0 w-full h-[100px] flex opacity-50">
+          {[0,1,2,3,4].map(i => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={i}
+              src="/lantern.png"
+              alt=" no"
+              aria-hidden="true"
+              crossOrigin="anonymous"
+              className="h-[100px] w-[200px] object-cover flex-shrink-0"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Main Content - Landscape Layout */}
+      <div className="flex h-full relative z-10">
+
+        {/* Left Section - Logo & Branding */}
+        <div className={cn("w-[15%] flex flex-col items-center justify-center bg-black/20 border-r", styles.accent)}>
+          <div className="flex flex-col items-center gap-2">
+            <div className={cn("p-2 rounded-full bg-gradient-to-br", styles.badge)}>
+              <Logo className="h-12 w-12" />
             </div>
           </div>
         </div>
 
-        {/* Right Side - QR Code */}
-        <div className={cn("w-full md:w-1/3 bg-black/20 p-6 flex flex-col items-center justify-center text-center relative backdrop-blur-sm", styles.text)}>
-          <div className="absolute top-0 bottom-0 left-0 hidden md:block border-l border-dashed border-white/30"></div>
+        {/* Center Section - Event Details */}
+        <div className={cn("flex-1 px-10 py-8 flex flex-col justify-between", styles.text)}>
 
-          <div className="w-full flex flex-col items-center justify-center h-full">
-            <p className="font-bold tracking-wider text-lg">{alumniName}</p>
-            <div className={cn("font-mono text-sm mb-2 opacity-80 px-3 py-1 rounded-full text-xs font-bold", styles.badge)}>
-              {finalTicketType}
-            </div>
-
-            {isDonator && (
-              <div className="flex items-center gap-1.5 text-amber-300 text-xs mb-2">
-                <Star className="h-3 w-3" />
-                <span>Valued Contributor</span>
+          {/* Top: Event Title */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className={cn("px-4 py-1.5 rounded-full text-[9px] font-bold tracking-widest", styles.badge)}>
+                CMHS ALUMNI ASSOCIATION
               </div>
-            )}
-
-
-
-            <div className="bg-white p-2 rounded-lg shadow-md inline-block my-2">
-              <QRCode value={secretCode} size={128} level="H" bgColor="#FFFFFF" fgColor="#000000" />
+              {isDonator && (
+                <div className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-bold tracking-wider", styles.badge)}>
+                  <Sparkles className="h-3 w-3" />
+                  <span>VIP</span>
+                </div>
+              )}
             </div>
-            <p className="mt-2 text-xs font-mono px-4 opacity-70 break-all">
-              {secretCode}
-            </p>
-            <p className="mt-4 text-xs font-light px-4 opacity-90">
-              Show this ticket at the entrance to get your event kit.
+
+            <div className="mb-6">
+              <h2 className={cn("text-6xl tracking-tight leading-none mb-2", styles.headline)}>
+                Grand Iftar
+              </h2>
+              <div className="flex items-center gap-3">
+                <div className={cn("h-[1.5px] w-12 bg-gradient-to-r", styles.border)} />
+                <h3 className={cn("text-3xl font-invitation", styles.secondary)}>
+                  Mahfil 2026
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          {/* Middle: Attendee Info */}
+          <div className={cn("bg-black/40 rounded-xl px-5 py-4 border inline-block", styles.accent)}>
+            <div className="flex items-center gap-6">
+              <div>
+                <p className="text-[9px] uppercase tracking-wider opacity-60 mb-1">Guest Name</p>
+                <p className="text-2xl font-bold">{alumniName}</p>
+              </div>
+              <div className={cn("w-[1px] h-10 bg-gradient-to-b", styles.border)} />
+              {batch && (
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider opacity-60 mb-1">Batch</p>
+                  <p className="text-xl font-semibold">{batch}</p>
+                </div>
+              )}
+              {phone && (
+                <>
+                  <div className={cn("w-[1px] h-10 bg-gradient-to-b", styles.border)} />
+                  <div>
+                    <p className="text-[9px] uppercase tracking-wider opacity-60 mb-1">Contact</p>
+                    <p className="text-sm font-mono opacity-90">{phone}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Bottom: Event Details - Simplified */}
+          <div className="flex items-center gap-10 opacity-80">
+            <div className="flex flex-col">
+              <p className="text-[9px] uppercase tracking-widest opacity-60 mb-1">Date</p>
+              <p className="text-xl font-bold">March 18, 2026</p>
+            </div>
+
+            <div className={cn("w-[1px] h-8 bg-gradient-to-b", styles.border)} />
+
+            <div className="flex flex-col">
+              <p className="text-[9px] uppercase tracking-widest opacity-60 mb-1">Time</p>
+              <p className="text-xl font-bold">03:00 PM</p>
+            </div>
+
+            <div className={cn("w-[1px] h-8 bg-gradient-to-b", styles.border)} />
+
+            <div className="flex flex-col">
+              <p className="text-[9px] uppercase tracking-widest opacity-60 mb-1">Venue</p>
+              <p className="text-xl font-bold">CMHS Campus</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Section - QR Code */}
+        <div className={cn("w-[20%] flex flex-col items-center justify-center bg-black/20 border-l px-6 py-8", styles.text, styles.accent)}>
+          <div className="space-y-4 flex flex-col items-center">
+            <p className="text-[8px] uppercase tracking-[0.3em] opacity-50 font-semibold">Entry Pass</p>
+
+            {/* QR Code */}
+            <div className={cn("p-[2px] rounded-2xl bg-gradient-to-br", styles.border)}>
+              <div className="bg-white p-3 rounded-2xl">
+                <QRCodeSVG
+                  value={secretCode}
+                  size={120}
+                  level="H"
+                />
+              </div>
+            </div>
+
+            {/* UUID */}
+            <div className="w-full">
+              <p className="text-[7px] font-mono opacity-40 tracking-wider uppercase text-center mb-1">Code</p>
+              <div className="bg-black/50 py-2 px-2 rounded-lg border border-white/10">
+                <p className="text-[7px] font-mono opacity-80 break-all leading-relaxed text-center">
+                  {secretCode.substring(0, 18)}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-[7px] text-center opacity-50 leading-relaxed uppercase tracking-wide">
+              Scan at entry
             </p>
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 bg-black/60 py-1.5 border-t border-white/10">
+        <p className="text-[8px] text-center text-white opacity-90 tracking-wider font-semibold drop-shadow-sm">
+          System Generated • Dev: <span className={cn("font-semibold", styles.secondary, "text-white")}>Reshad (2019)</span> • www.reshad.dev
+        </p>
+      </div>
     </Card>
+    </div>
   );
 });
 

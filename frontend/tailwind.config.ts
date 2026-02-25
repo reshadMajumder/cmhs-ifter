@@ -22,6 +22,8 @@ export default {
         code: ['monospace'],
         graffiti: ['Gloria Hallelujah', 'cursive'],
         brush: ['Kaushan Script', 'cursive'],
+        invitation: ['Cormorant Garamond', 'serif'],
+        elegant: ['Cinzel', 'serif'],
       },
       colors: {
         background: 'hsl(var(--background))',

@@ -77,8 +77,14 @@ body {
   }
 
   .font-invitation {
-    font-family: 'Kaushan Script', cursive;
+    font-family: 'Cormorant Garamond', serif;
     letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  .font-elegant {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.08em;
   }
 
   .glass-card {
@@ -86,5 +92,62 @@ body {
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+
+  /* Elegant Ticket Animations */
+  @keyframes sway {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-5px) rotate(0.5deg);
+    }
+    75% {
+      transform: translateY(5px) rotate(-0.5deg);
+    }
+  }
+
+  .animate-sway {
+    animation: sway 8s ease-in-out infinite;
+  }
+
+  /* Radial gradient for spotlight effect */
+  .bg-radial-gradient {
+    background: radial-gradient(circle at 50% 50%, var(--tw-gradient-stops));
+  }
+
+  /* Elegant shine effect */
+  @keyframes shine {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  .animate-shine {
+    background-size: 200% auto;
+    animation: shine 8s linear infinite;
+  }
+
+  /* Premium shimmer effect */
+  @keyframes shimmer {
+    0% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 3s ease-in-out infinite;
   }
 }

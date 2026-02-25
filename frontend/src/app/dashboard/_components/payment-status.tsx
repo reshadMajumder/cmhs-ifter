@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CreditCard, CheckCircle2, Clock, Ticket } from 'lucide-react';
+import { CreditCard, CheckCircle2, Clock, Ticket, Copy } from 'lucide-react';
 import type { ProfileFormValues } from '../profile/_components/profile-form';
 
 interface Payment {
@@ -73,17 +73,64 @@ export default function PaymentStatus({ payments, profile }: PaymentStatusProps)
                     </div>
                 </div>
 
-                <div className="bg-muted/50 p-4 rounded-xl border text-sm space-y-4">
+                <div className="bg-muted/50 p-6 rounded-2xl border text-sm space-y-6">
                     <div className="flex items-center gap-2 text-primary font-bold">
-                        <CreditCard className="h-4 w-4" />
-                        <span>How to Pay (bKash)</span>
+                        <CreditCard className="h-5 w-5" />
+                        <span className="text-lg">How to Pay (bKash)</span>
                     </div>
-                    <div className="space-y-3 text-muted-foreground">
-                        <p>1. Open bKash App and select <span className="font-bold text-foreground">"Send Money"</span></p>
-                        <p>2. Enter Number: <span className="font-bold text-foreground">01627-076527</span></p>
-                        <p>3. Enter Amount: <span className="font-bold text-foreground">{registrationFee} TK</span></p>
-                        <p>4. Enter PIN and complete payment.</p>
-                        <p>5. Copy TrxID and click "Confirm My Payment" below.</p>
+
+                    <div className="space-y-5 text-muted-foreground">
+                        <p className="flex items-start gap-3">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs ring-1 ring-primary/20">1</span>
+                            <span>Open bKash App and select <span className="font-bold text-foreground text-primary">"Send Money"</span></span>
+                        </p>
+
+                        <div className="space-y-3">
+                            <p className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs ring-1 ring-primary/20">2</span>
+                                <span>Copy and send to any of these <span className="font-bold text-foreground">accounts</span>:</span>
+                            </p>
+
+                            <div className="grid grid-cols-1 gap-3 pl-9">
+                                <button
+                                    onClick={() => {
+                                        navigator.clipboard.writeText('01851070809');
+                                        alert('Copied: 01851070809');
+                                    }}
+                                    className="flex items-center justify-between p-3 bg-white hover:bg-primary/5 rounded-xl border-2 border-primary/10 hover:border-primary/30 transition-all group text-left"
+                                >
+                                    <div>
+                                        <p className="font-mono font-bold text-foreground text-base tracking-wider transition-colors group-hover:text-primary">01851070809</p>
+                                        <p className="text-[10px] opacity-60 uppercase tracking-widest font-bold">Atifur Rahman</p>
+                                    </div>
+                                    <Copy className="h-4 w-4 opacity-30 group-hover:opacity-100 transition-opacity text-primary" />
+                                </button>
+
+                                <button
+                                    onClick={() => {
+                                        navigator.clipboard.writeText('01938485079');
+                                        alert('Copied: 01938485079');
+                                    }}
+                                    className="flex items-center justify-between p-3 bg-white hover:bg-primary/5 rounded-xl border-2 border-primary/10 hover:border-primary/30 transition-all group text-left"
+                                >
+                                    <div>
+                                        <p className="font-mono font-bold text-foreground text-base tracking-wider transition-colors group-hover:text-primary">01938485079</p>
+                                        <p className="text-[10px] opacity-60 uppercase tracking-widest font-bold">Atifur Rahman Bijoy</p>
+                                    </div>
+                                    <Copy className="h-4 w-4 opacity-30 group-hover:opacity-100 transition-opacity text-primary" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <p className="flex items-start gap-3">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs ring-1 ring-primary/20">3</span>
+                            <span>Enter Amount: <span className="font-bold text-foreground text-primary">{registrationFee} TK</span></span>
+                        </p>
+
+                        <p className="flex items-start gap-3 font-semibold text-foreground">
+                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs shadow-lg shadow-primary/30">4</span>
+                            <span>Copy <span className="bg-primary/10 px-2 py-0.5 rounded text-primary">TrxID</span> and click "Confirm My Payment" below.</span>
+                        </p>
                     </div>
                 </div>
 

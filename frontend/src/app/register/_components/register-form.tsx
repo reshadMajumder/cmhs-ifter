@@ -243,7 +243,7 @@ export default function RegisterForm() {
             name="subject"
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel>Subject</FormLabel>
+                <FormLabel>Group</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}

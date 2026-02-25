@@ -48,9 +48,32 @@ export default function ContactPage() {
                                 <Phone className="h-6 w-6 text-primary mt-1" />
                                 <div>
                                     <h4 className="font-semibold">Phone</h4>
-                                    <a href="tel:+8801627076527" className="text-muted-foreground hover:text-primary transition-colors">
-                                        +8801627076527
-                                    </a>
+                                    <div className="space-y-3 mt-2">
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-bold text-primary">Dr. Md. Azharul Islam (Mitul)</span>
+                                            <a href="tel:+8801719454545" className="text-muted-foreground hover:text-primary transition-colors">
+                                                01719454545
+                                            </a>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-bold text-primary">Farhan Iqbal Shad</span>
+                                            <a href="tel:+8801401165474" className="text-muted-foreground hover:text-primary transition-colors">
+                                                01401165474
+                                            </a>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-bold text-primary">Rohan Chowdhury</span>
+                                            <a href="tel:+8801754658253" className="text-muted-foreground hover:text-primary transition-colors">
+                                                01754658253
+                                            </a>
+                                        </div>
+                                        <div className="flex flex-col border-t border-border/30 pt-2 mt-2">
+                                            <span className="text-xs text-muted-foreground">Website Support</span>
+                                            <a href="tel:+8801627076527" className="text-muted-foreground hover:text-primary transition-colors">
+                                                01627076527
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
