@@ -6,7 +6,7 @@ import { CardHeader, CardTitle, CardDescription, CardContent } from '@/component
 import type { ProfileFormValues } from './profile-form';
 
 interface UserProfileCardProps {
-    user: Partial<ProfileFormValues>
+  user: Partial<ProfileFormValues>
 }
 
 export default function UserProfileCard({ user }: UserProfileCardProps) {
@@ -18,7 +18,7 @@ export default function UserProfileCard({ user }: UserProfileCardProps) {
           <AvatarFallback>{user.name ? user.name.split(' ').map(n => n[0]).join('') : 'U'}</AvatarFallback>
         </Avatar>
         <CardTitle className="font-headline text-2xl">{user.name}</CardTitle>
-        <CardDescription>{user.is_guest ? 'Guest' : `Batch of ${user.batch}`}</CardDescription>
+        <CardDescription>Batch of {user.batch}</CardDescription>
       </CardHeader>
       <CardContent className="text-center">
         <p className="text-sm text-muted-foreground">{user.phone || 'No phone provided.'}</p>
