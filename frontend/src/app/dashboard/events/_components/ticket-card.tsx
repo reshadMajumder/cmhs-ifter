@@ -192,9 +192,9 @@ const TicketCard = React.forwardRef<HTMLDivElement, TicketCardProps>(({
           {/* Top: Event Title */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className={cn("px-4 py-1.5 rounded-full text-[9px] font-bold tracking-widest", styles.badge)}>
+              {/* <div className={cn("px-4 py-1.5 rounded-full text-[9px] font-bold tracking-widest", styles.badge)}>
                 CMHS ALUMNI ASSOCIATION
-              </div>
+              </div> */}
               {isDonator && (
                 <div className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-bold tracking-wider", styles.badge)}>
                   <Sparkles className="h-3 w-3" />
@@ -299,10 +299,19 @@ const TicketCard = React.forwardRef<HTMLDivElement, TicketCardProps>(({
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 bg-black/60 py-1.5 border-t border-white/10">
-        <p className="text-[8px] text-center text-white opacity-90 tracking-wider font-semibold drop-shadow-sm">
-          System Generated • Dev: <span className={cn("font-semibold", styles.secondary, "text-white")}>Reshad (2019)</span> • www.reshad.dev
-        </p>
+      <div className="absolute bottom-0 left-0 right-0 z-10 bg-black/60 py-1.5 border-t border-white/10 flex items-center justify-between px-6">
+        {/* Center: Powered by */}
+        <div className="flex-1 flex justify-center">
+          <span className="text-[8px] text-white opacity-90 tracking-wider font-semibold drop-shadow-sm">
+            Powered by: <span className="font-bold">CMHS ALUMNI ASSOCIATION</span>
+          </span>
+        </div>
+        {/* Right: System Generated */}
+        <div className="flex-1 flex justify-end">
+          <span className="text-[8px] text-white opacity-90 tracking-wider font-semibold drop-shadow-sm">
+            System Generated • Dev: <span className={cn("font-semibold", styles.secondary, "text-white")}>Reshad (2019)</span> • www.reshad.dev
+          </span>
+        </div>
       </div>
     </Card>
     </div>
