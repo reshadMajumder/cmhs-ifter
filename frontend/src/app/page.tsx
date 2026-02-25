@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { cn } from '@/lib/utils';
 
 import Loader from '@/components/loader';
 import Header from '@/components/header';
@@ -31,50 +32,52 @@ export default function Home() {
         <Header />
         <main>
           <Hero />
-          <MarqueeNotice />
-          <div className="relative bg-background/80">
-            {parallaxImage && (
-              <div className="absolute inset-0 z-0">
-                <Image
-                  src={parallaxImage.imageUrl}
-                  alt={parallaxImage.description}
-                  fill
-                  className="object-cover object-center"
-                  data-ai-hint={parallaxImage.imageHint}
-                />
-                <div className="absolute inset-0 bg-background/80"></div>
+          <div className="relative z-10 bg-background">
+            <MarqueeNotice />
+            <div className="relative min-h-screen">
+              {parallaxImage && (
+                <div className="sticky top-0 h-screen w-full -z-10 overflow-hidden">
+                  <Image
+                    src={parallaxImage.imageUrl}
+                    alt={parallaxImage.description}
+                    fill
+                    className="object-cover object-center"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-background/40"></div>
+                </div>
+              )}
+              <div className={cn("relative z-10", parallaxImage ? "-mt-[100vh]" : "")}>
+                <ScrollWrapper>
+                  <Notice />
+                </ScrollWrapper>
+                <ScrollWrapper>
+                  <Stats />
+                </ScrollWrapper>
+                <ScrollWrapper>
+                  <OurStory />
+                </ScrollWrapper>
+                <ScrollWrapper>
+                  <Pricing />
+                </ScrollWrapper>
+                <ScrollWrapper>
+                  <Instructions />
+                </ScrollWrapper>
+                {/* <PersonalizedContent />
+                <GiftsOfMemory /> */}
+                <ScrollWrapper>
+                  <Venue />
+                </ScrollWrapper>
+                <ScrollWrapper>
+                  <Donations />
+                </ScrollWrapper>
+                <ScrollWrapper>
+                  <Sponsors />
+                </ScrollWrapper>
+                <ScrollWrapper>
+                  <ContactSection />
+                </ScrollWrapper>
               </div>
-            )}
-            <div className="relative z-10">
-              <ScrollWrapper>
-                <Notice />
-              </ScrollWrapper>
-              <ScrollWrapper>
-                <Stats />
-              </ScrollWrapper>
-              <ScrollWrapper>
-                <OurStory />
-              </ScrollWrapper>
-              <ScrollWrapper>
-                <Pricing />
-              </ScrollWrapper>
-              <ScrollWrapper>
-                <Instructions />
-              </ScrollWrapper>
-              <PersonalizedContent />
-              <GiftsOfMemory />
-              <ScrollWrapper>
-                <Venue />
-              </ScrollWrapper>
-              <ScrollWrapper>
-                <Donations />
-              </ScrollWrapper>
-              <ScrollWrapper>
-                <Sponsors />
-              </ScrollWrapper>
-              <ScrollWrapper>
-                <ContactSection />
-              </ScrollWrapper>
             </div>
           </div>
         </main>

@@ -13,11 +13,11 @@ import { cn } from '@/lib/utils';
 import { API_BASE_URL } from '@/lib/constants';
 
 const navItems = [
-    { href: '/dashboard', icon: Home, label: 'Dashboard' },
-    { href: '/dashboard/profile', icon: User, label: 'Profile' },
-    { href: '/dashboard/events', icon: Calendar, label: 'My Events' },
-    { href: '/dashboard/photobooth', icon: Camera, label: 'Photo Frame' },
-    { href: '/dashboard/donate', icon: Heart, label: 'Donate' },
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/dashboard/profile', icon: User, label: 'Profile' },
+  { href: '/dashboard/events', icon: Calendar, label: 'My Events' },
+  { href: '/dashboard/photobooth', icon: Camera, label: 'Photo Frame' },
+  { href: '/dashboard/donate', icon: Heart, label: 'Donate' },
 ]
 
 export default function DashboardLayout({
@@ -54,7 +54,7 @@ export default function DashboardLayout({
         console.error('Logout API call failed:', error);
       }
     }
-    
+
     // Always clear local storage and redirect
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('refreshToken');
@@ -86,22 +86,22 @@ export default function DashboardLayout({
                   onClick={() => setIsSheetOpen(false)}
                 >
                   <Logo className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">RBMB Reunion</span>
+                  <span className="sr-only">CMHS GRAND IFTER</span>
                 </Link>
                 {navItems.map((item) => (
-                    <Link
-                        key={item.href}
-                        href={item.href}
-                        className={cn("flex items-center gap-4 px-2.5",
-                            pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                        )}
-                        onClick={() => setIsSheetOpen(false)}
-                    >
-                        <item.icon className="h-5 w-5" />
-                        {item.label}
-                    </Link>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn("flex items-center gap-4 px-2.5",
+                      pathname === item.href ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                    )}
+                    onClick={() => setIsSheetOpen(false)}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    {item.label}
+                  </Link>
                 ))}
-                 <button
+                <button
                   onClick={() => {
                     handleLogout();
                     setIsSheetOpen(false);
@@ -114,10 +114,10 @@ export default function DashboardLayout({
               </nav>
             </SheetContent>
           </Sheet>
-           {/* Can add a mobile menu trigger here */}
+          {/* Can add a mobile menu trigger here */}
         </header>
         <main className="flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-            {children}
+          {children}
         </main>
       </div>
     </div>

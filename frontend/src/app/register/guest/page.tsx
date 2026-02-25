@@ -9,11 +9,11 @@ export default function GuestRegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-background p-4 py-12">
       <Card className="w-full max-w-2xl shadow-2xl">
         <CardHeader className="text-center">
-           <div className="mx-auto mb-4">
+          <div className="mx-auto mb-4">
             <Logo className="h-16 w-16" />
           </div>
           <CardTitle className="text-3xl font-headline">Guest Registration</CardTitle>
-          <CardDescription>Register as a guest for the RBMB Grand Reunion 2026.</CardDescription>
+          <CardDescription>Register as a guest for the CMHS GRAND IFTER MAHFIL 2026.</CardDescription>
         </CardHeader>
         <CardContent>
           <GuestRegisterForm />

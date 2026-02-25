@@ -24,10 +24,10 @@ export default function Loader() {
     >
       <div className="relative">
         <Image
-          src="https://res.cloudinary.com/dzgs1uhn0/image/upload/v1761468825/rbmb2-loader-removebg-preview_dicca6.png"
+          src="https://res.cloudinary.com/dzdf1wu5x/image/upload/v1771995486/1-removebg-preview_wpxnns.png"
           alt="Loading..."
-          width={200}
-          height={200}
+          width={600}
+          height={600}
           className="animate-pulse"
           unoptimized
         />

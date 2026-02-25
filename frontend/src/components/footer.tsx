@@ -12,11 +12,11 @@ export default function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <Logo className="h-10 w-10" />
               <span className="text-lg font-bold font-headline">
-                RBMB Reunion
+                CMHS GRAND IFTER 2026
               </span>
             </div>
             <p className="text-muted-foreground text-sm">
-              &copy; {new Date().getFullYear()} RBMBIAN Alumni Association. All Rights Reserved.
+              &copy; {new Date().getFullYear()} CMHS Alumni Association. All Rights Reserved.
             </p>
           </div>
           <div>
@@ -47,31 +47,42 @@ export default function Footer() {
         <div className="mt-8 pt-6 border-t text-center">
           <p className="text-sm text-muted-foreground">
             Designed & Developed by{' '}
-            <a 
-              href="https://reshad.dev" 
-              target="_blank" 
+            <a
+              href="https://reshad.dev"
+              target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-primary hover:underline"
             >
               Reshad
             </a>
             {' '} | {' '}
-            <a 
-              href="https://www.facebook.com/jojo.reshad/" 
-              target="_blank" 
+            <a
+              href="https://www.facebook.com/jojo.reshad/"
+              target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
             >
               Facebook
             </a>
             {' '} | {' '}
-            <a 
-              href="https://wa.me/8801627076527" 
-              target="_blank" 
+            <a
+              href="https://wa.me/8801627076527"
+              target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
             >
               WhatsApp
+            </a>
+
+            {/* email */}
+            {' '} | {' '}
+            <a
+              href="mailto:hi@reshad.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              Email
             </a>
           </p>
         </div>

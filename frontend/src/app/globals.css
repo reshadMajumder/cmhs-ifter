@@ -49,6 +49,7 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -57,5 +58,33 @@ body {
 @layer utilities {
   .marquee-content {
     animation-duration: 20s;
+  }
+
+  .text-outline {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
+    text-stroke: 1px rgba(255, 255, 255, 0.4);
+    color: transparent;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.15));
+    transition: all 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .text-outline {
+      -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.7);
+      text-stroke: 1.5px rgba(255, 255, 255, 0.7);
+      filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.25));
+    }
+  }
+
+  .font-invitation {
+    font-family: 'Kaushan Script', cursive;
+    letter-spacing: 0.05em;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
 }

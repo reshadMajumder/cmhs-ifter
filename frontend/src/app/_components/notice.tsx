@@ -38,7 +38,12 @@ export default function Notice() {
   }, []);
 
   return (
-    <section className="py-20 bg-background/80">
+    <section className="relative py-20 overflow-hidden">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 -z-10 opacity-70 pointer-events-none bg-center bg-no-repeat bg-cover"
+        style={{ backgroundImage: 'url("https://res.cloudinary.com/dzdf1wu5x/image/upload/v1771999550/85213-removebg-preview_sgldmm.png")' }}
+      ></div>
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold font-headline flex items-center justify-center gap-4">
@@ -85,18 +90,18 @@ export default function Notice() {
 
 
 const CardSkeleton = () => (
-    <Card className="flex flex-col">
-        <CardHeader>
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-1/2 mt-2" />
-        </CardHeader>
-        <CardContent className="flex-grow">
-             <Skeleton className="h-4 w-full" />
-             <Skeleton className="h-4 w-full mt-2" />
-             <Skeleton className="h-4 w-2/3 mt-2" />
-        </CardContent>
-        <CardFooter>
-            <Skeleton className="h-6 w-20" />
-        </CardFooter>
-    </Card>
+  <Card className="flex flex-col">
+    <CardHeader>
+      <Skeleton className="h-6 w-3/4" />
+      <Skeleton className="h-4 w-1/2 mt-2" />
+    </CardHeader>
+    <CardContent className="flex-grow">
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-full mt-2" />
+      <Skeleton className="h-4 w-2/3 mt-2" />
+    </CardContent>
+    <CardFooter>
+      <Skeleton className="h-6 w-20" />
+    </CardFooter>
+  </Card>
 )

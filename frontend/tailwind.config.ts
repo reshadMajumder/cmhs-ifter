@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -21,6 +21,7 @@ export default {
         headline: ['Playfair Display', 'serif'],
         code: ['monospace'],
         graffiti: ['Gloria Hallelujah', 'cursive'],
+        brush: ['Kaushan Script', 'cursive'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -111,7 +112,7 @@ export default {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-100%)' },
         },
-         marquee2: {
+        marquee2: {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(0%)' },
         },

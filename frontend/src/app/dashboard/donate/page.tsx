@@ -8,7 +8,7 @@ export default function DonatePage() {
       <div className="lg:col-span-1">
         <Card>
           <CardHeader>
-            <CardTitle className="font-headline text-2xl">Support the Reunion</CardTitle>
+            <CardTitle className="font-headline text-2xl">Support the Ifter Mahfil</CardTitle>
             <CardDescription>Your contribution makes this event memorable for everyone.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -17,14 +17,14 @@ export default function DonatePage() {
         </Card>
       </div>
       <div className="lg:col-span-2">
-         <Card>
-            <CardHeader>
-                <CardTitle className="font-headline text-2xl">Transaction History</CardTitle>
-                <CardDescription>Your recent payments and donations.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <TransactionHistory />
-            </CardContent>
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-headline text-2xl">Transaction History</CardTitle>
+            <CardDescription>Your recent payments and donations.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <TransactionHistory />
+          </CardContent>
         </Card>
       </div>
     </div>

@@ -10,7 +10,7 @@ export default function ContactPage() {
         <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow container mx-auto py-12 px-4">
-                <div className="text-center mb-12">
+                <div className="text-center pt-5 mb-12">
                     <h1 className="text-4xl md:text-5xl font-bold font-headline">Contact Us</h1>
                     <p className="text-lg text-muted-foreground mt-2">
                         We'd love to hear from you.
@@ -35,12 +35,12 @@ export default function ContactPage() {
                             You can also reach us directly through the following channels. We look forward to connecting with you!
                         </p>
                         <div className="space-y-4">
-                             <div className="flex items-start gap-4">
+                            <div className="flex items-start gap-4">
                                 <Mail className="h-6 w-6 text-primary mt-1" />
                                 <div>
                                     <h4 className="font-semibold">Email</h4>
-                                    <a href="mailto:rbmbreunion2026@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
-                                        rbmbreunion2026@gmail.com
+                                    <a href="mailto:excmhsian@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+                                        excmhsian@gmail.com
                                     </a>
                                 </div>
                             </div>
@@ -48,8 +48,8 @@ export default function ContactPage() {
                                 <Phone className="h-6 w-6 text-primary mt-1" />
                                 <div>
                                     <h4 className="font-semibold">Phone</h4>
-                                    <a href="tel:01610498000" className="text-muted-foreground hover:text-primary transition-colors">
-                                        01610498000
+                                    <a href="tel:+8801627076527" className="text-muted-foreground hover:text-primary transition-colors">
+                                        +8801627076527
                                     </a>
                                 </div>
                             </div>

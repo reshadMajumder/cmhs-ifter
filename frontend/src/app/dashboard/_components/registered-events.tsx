@@ -7,12 +7,12 @@ import { Ticket, Star } from 'lucide-react';
 import Link from 'next/link';
 
 interface RegisteredEventsProps {
-    hasDonation: boolean;
+  hasDonation: boolean;
 }
 
 export default function RegisteredEvents({ hasDonation }: RegisteredEventsProps) {
   const event = {
-    name: 'RBMB Grand Reunion 2026',
+    name: 'CMHS GRAND IFTER MAHFIL 2026',
     date: 'March 23, 2026',
     tier: hasDonation ? 'Valued Contributor' : 'Alumni',
     paymentStatus: 'Paid',
@@ -30,9 +30,9 @@ export default function RegisteredEvents({ hasDonation }: RegisteredEventsProps)
             <p className="text-sm text-muted-foreground">{event.date}</p>
           </div>
           <div className="text-right">
-             <div className="font-semibold flex items-center gap-2 justify-end">
-                {hasDonation && <Star className="h-4 w-4 text-amber-500" />}
-                <p>{event.tier}</p>
+            <div className="font-semibold flex items-center gap-2 justify-end">
+              {hasDonation && <Star className="h-4 w-4 text-amber-500" />}
+              <p>{event.tier}</p>
             </div>
             <p className="text-sm text-green-600 font-bold">{event.paymentStatus}</p>
           </div>

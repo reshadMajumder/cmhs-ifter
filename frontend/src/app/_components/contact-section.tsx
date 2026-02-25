@@ -15,45 +15,61 @@ export default function ContactSection() {
                         Have questions or want to get involved? We'd love to hear from you.
                     </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-                    <div>
-                        <Card className="shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <CardHeader>
-                                <CardTitle>Send us a Message</CardTitle>
-                                <CardDescription>Our team will get back to you within 24 hours.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <ContactForm />
-                            </CardContent>
-                        </Card>
-                    </div>
-                    <div className="space-y-6 self-center">
-                        <h3 className="text-2xl font-bold font-headline">Contact Information</h3>
-                        <p className="text-muted-foreground">
-                            You can also reach us directly through the following channels. We look forward to connecting with you!
-                        </p>
-                        <div className="space-y-4">
-                             <div className="flex items-start gap-4">
-                                <Mail className="h-6 w-6 text-primary mt-1" />
-                                <div>
-                                    <h4 className="font-semibold">Email</h4>
-                                    <a href="mailto:rbmbreunion2026@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
-                                        rbmbreunion2026@gmail.com
-                                    </a>
+                <Card className="shadow-lg hover:shadow-2xl transition-all duration-300 max-w-5xl mx-auto overflow-hidden border-none sm:border">
+                    <div className="grid grid-cols-1 md:grid-cols-2">
+                        {/* Left Side: Form */}
+                        <div className="p-8 md:p-12">
+                            <div className="mb-8">
+                                <h3 className="text-2xl font-bold font-headline mb-2">Send us a Message</h3>
+                                <p className="text-muted-foreground text-sm">Our team will get back to you within 24 hours.</p>
+                            </div>
+                            <ContactForm />
+                        </div>
+
+                        {/* Right Side: Info */}
+                        <div className="p-8 md:p-12 bg-accent/5 border-t md:border-t-0 md:border-l border-border/50 flex flex-col justify-center">
+                            <div className="mb-8">
+                                <h3 className="text-2xl font-bold font-headline mb-2">Contact Information</h3>
+                                <p className="text-muted-foreground text-sm">
+                                    You can also reach us directly through the following channels.
+                                </p>
+                            </div>
+
+                            <div className="space-y-8">
+                                <div className="flex items-start gap-4 group">
+                                    <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary/20 transition-colors">
+                                        <Mail className="h-6 w-6 text-primary" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-lg mb-1">Email</h4>
+                                        <a href="mailto:excmhsian@gmail.com" className="text-muted-foreground hover:text-primary transition-colors block">
+                                            excmhsian@gmail.com
+
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-4 group">
+                                    <div className="bg-primary/10 p-3 rounded-lg group-hover:bg-primary/20 transition-colors">
+                                        <Phone className="h-6 w-6 text-primary" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-lg mb-1">Phone</h4>
+                                        <a href="tel:+8801627076527" className="text-muted-foreground hover:text-primary transition-colors block">
+                                            +8801627076527
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="flex items-start gap-4">
-                                <Phone className="h-6 w-6 text-primary mt-1" />
-                                <div>
-                                    <h4 className="font-semibold">Phone</h4>
-                                    <a href="tel:01610498000" className="text-muted-foreground hover:text-primary transition-colors">
-                                        01610498000
-                                    </a>
-                                </div>
+
+                            <div className="mt-12 pt-8 border-t border-border/50">
+                                <p className="text-accent font-bold italic">
+                                    We look forward to connecting with you!
+                                </p>
                             </div>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </section>
     );

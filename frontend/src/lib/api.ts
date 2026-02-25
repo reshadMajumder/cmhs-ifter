@@ -17,7 +17,9 @@ async function refreshAccessToken(): Promise<string | null> {
     const refreshToken = localStorage.getItem('refreshToken');
     if (!refreshToken) {
         console.error("No refresh token available");
-        // Optionally, redirect to login or handle session expiration
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('isLoggedIn');
         return null;
     }
 
@@ -39,7 +41,7 @@ async function refreshAccessToken(): Promise<string | null> {
         const newAccessToken = data.access;
         localStorage.setItem('accessToken', newAccessToken);
         // The API might also return a new refresh token, handle that if necessary
-        if(data.refresh) {
+        if (data.refresh) {
             localStorage.setItem('refreshToken', data.refresh);
         }
 
@@ -73,10 +75,10 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
         // Handle case where no token is available, maybe redirect to login
         throw new Error('Authentication required.');
     }
-    
+
     const headers = new Headers(options.headers || {});
     headers.set('Authorization', `Bearer ${accessToken}`);
-    
+
     if (!(options.body instanceof FormData)) {
         headers.set('Content-Type', 'application/json');
     }

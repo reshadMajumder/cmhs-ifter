@@ -13,11 +13,11 @@ interface SidebarNavProps {
 }
 
 const navItems = [
-    { href: '/dashboard', icon: Home, label: 'Dashboard' },
-    { href: '/dashboard/profile', icon: User, label: 'Profile' },
-    { href: '/dashboard/events', icon: Calendar, label: 'My Events' },
-    { href: '/dashboard/photobooth', icon: Camera, label: 'Photo Frame' },
-    { href: '/dashboard/donate', icon: Heart, label: 'Donate' },
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/dashboard/profile', icon: User, label: 'Profile' },
+  { href: '/dashboard/events', icon: Calendar, label: 'My Events' },
+  { href: '/dashboard/photobooth', icon: Camera, label: 'Photo Frame' },
+  { href: '/dashboard/donate', icon: Heart, label: 'Donate' },
 ]
 
 export default function SidebarNav({ onLogout }: SidebarNavProps) {
@@ -29,23 +29,23 @@ export default function SidebarNav({ onLogout }: SidebarNavProps) {
         <nav className="flex flex-col items-center gap-4 px-2 py-4">
           <Link href="/" className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
             <Logo className="h-5 w-5 transition-all group-hover:scale-110" />
-            <span className="sr-only">RBMB Reunion</span>
+            <span className="sr-only">CMHS GRAND IFTER</span>
           </Link>
           {navItems.map((item) => (
             <Tooltip key={item.href}>
-                <TooltipTrigger asChild>
+              <TooltipTrigger asChild>
                 <Link
-                    href={item.href}
-                    className={cn(
-                        "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8",
-                        pathname === item.href && "bg-accent text-accent-foreground"
-                    )}
+                  href={item.href}
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8",
+                    pathname === item.href && "bg-accent text-accent-foreground"
+                  )}
                 >
-                    <item.icon className="h-5 w-5" />
-                    <span className="sr-only">{item.label}</span>
+                  <item.icon className="h-5 w-5" />
+                  <span className="sr-only">{item.label}</span>
                 </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right">{item.label}</TooltipContent>
+              </TooltipTrigger>
+              <TooltipContent side="right">{item.label}</TooltipContent>
             </Tooltip>
           ))}
         </nav>

@@ -41,7 +41,7 @@ export default function Header() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
+
     // Check login status from localStorage
     const loggedInStatus = localStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(loggedInStatus);
@@ -65,17 +65,17 @@ export default function Header() {
     const refreshToken = localStorage.getItem('refreshToken');
 
     if (refreshToken) {
-        try {
-            await fetch(`${API_BASE_URL}/api/accounts/logout/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ refresh: refreshToken }),
-            });
-        } catch (error) {
-            console.error('Logout API call failed:', error);
-        }
+      try {
+        await fetch(`${API_BASE_URL}/api/accounts/logout/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ refresh: refreshToken }),
+        });
+      } catch (error) {
+        console.error('Logout API call failed:', error);
+      }
     }
 
     localStorage.removeItem('isLoggedIn');
@@ -88,15 +88,15 @@ export default function Header() {
     router.push('/');
     setIsMenuOpen(false);
   };
-  
+
   const closeMenu = () => setIsMenuOpen(false);
 
   const authButton = isLoggedIn ? (
-    <Button asChild size="lg" className="w-full sm:w-auto" onClick={closeMenu}>
+    <Button variant="ghost" asChild size="lg" className="w-full sm:w-auto text-white hover:bg-white/10 hover:text-white" onClick={closeMenu}>
       <Link href="/dashboard"><LayoutDashboard className="mr-2 h-5 w-5" />Dashboard</Link>
     </Button>
   ) : (
-    <Button asChild size="lg" className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-accent/90" onClick={closeMenu}>
+    <Button variant="ghost" asChild size="lg" className="w-full sm:w-auto text-white hover:bg-white/10 hover:text-white" onClick={closeMenu}>
       <Link href="/login"><LogIn className="mr-2 h-5 w-5" />Login</Link>
     </Button>
   );
@@ -104,32 +104,32 @@ export default function Header() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 w-full transition-all duration-300',
-        isScrolled || isMenuOpen ? 'bg-background/95 shadow-md backdrop-blur-sm' : 'bg-transparent',
+        'absolute top-0 z-40 w-full transition-all duration-300',
+        isMenuOpen ? 'bg-background/95 shadow-md backdrop-blur-sm' : 'bg-black/10 backdrop-blur-sm',
         isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
       )}
     >
-      <div className="container mx-auto flex h-16 items-center justify-between">
+      <div className="container mx-auto px-4 flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <Logo className="h-10 w-10 transition-transform hover:scale-110" />
-          <h1 className="hidden text-xl font-bold tracking-tight text-foreground sm:block font-headline">
-            RBMB Reunion
+          <h1 className="hidden text-xl font-bold tracking-tight text-white sm:block font-headline">
+            CMHSians
           </h1>
         </Link>
         <div className="hidden sm:flex items-center gap-2">
-          <Button variant="ghost" asChild>
+          <Button variant="ghost" asChild className="text-white hover:bg-white/10 hover:text-white">
             <Link href="/contact"><MessageSquare className="mr-2 h-4 w-4" /> Contact Us</Link>
           </Button>
-          <Button variant="ghost" asChild>
+          <Button variant="ghost" asChild className="text-white hover:bg-white/10 hover:text-white">
             <Link href="/dashboard/donate"><Heart className="mr-2 h-4 w-4" /> Donate</Link>
           </Button>
           {authButton}
           {isLoggedIn && (
-            <Button variant="ghost" onClick={handleLogout}>Logout</Button>
+            <Button variant="ghost" onClick={handleLogout} className="text-white hover:bg-white/10 hover:text-white">Logout</Button>
           )}
         </div>
         <div className="sm:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white hover:bg-white/10 hover:text-white">
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             <span className="sr-only">Toggle menu</span>
           </Button>
@@ -138,11 +138,11 @@ export default function Header() {
       {isMenuOpen && (
         <div className="sm:hidden p-4 border-t">
           <div className="flex flex-col gap-4">
-             <Button variant="outline" asChild className="w-full" onClick={closeMenu}>
-                <Link href="/contact"><MessageSquare className="mr-2 h-4 w-4" /> Contact Us</Link>
+            <Button variant="outline" asChild className="w-full" onClick={closeMenu}>
+              <Link href="/contact"><MessageSquare className="mr-2 h-4 w-4" /> Contact Us</Link>
             </Button>
-             <Button variant="outline" asChild className="w-full" onClick={closeMenu}>
-                <Link href="/dashboard/donate"><Heart className="mr-2 h-4 w-4" /> Donate</Link>
+            <Button variant="outline" asChild className="w-full" onClick={closeMenu}>
+              <Link href="/dashboard/donate"><Heart className="mr-2 h-4 w-4" /> Donate</Link>
             </Button>
             {authButton}
             {isLoggedIn && (

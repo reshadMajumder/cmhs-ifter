@@ -3,14 +3,14 @@
     {
       "id": "parallax-bg",
       "description": "A beautiful, wide shot of the Ranir Bazar High School campus.",
-      "imageUrl": "https://images.unsplash.com/photo-1706078352329-977b4cb3f889?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzY2hvb2wlMjBjYW1wdXN8ZW58MHx8fHwxNzYxMjI1NTI2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://res.cloudinary.com/dzdf1wu5x/image/upload/v1772003532/AZyToOqWmoRVoFGmW17fZA-AZyToOqWkJKyi16bimAztg_lvwypq.jpg",
       "imageHint": "school campus"
     },
     {
       "id": "our-story",
-      "description": "An old, nostalgic photo of the Ranir Bazar High School building.",
-      "imageUrl": "https://res.cloudinary.com/dzgs1uhn0/image/upload/v1762191804/rbmb-story_oje7kr.jpg",
-      "imageHint": "old school"
+      "description": "Ranir Bazar High School Alumni Gathering",
+      "imageUrl": "https://res.cloudinary.com/dzdf1wu5x/image/upload/v1771994020/Screenshot_2026-02-25_103233_khzdln.png",
+      "imageHint": "alumni gathering"
     },
     {
       "id": "instruction-video-thumb",
@@ -39,7 +39,7 @@
     {
       "id": "venue-image",
       "description": "A map showing the location of the event.",
-      "imageUrl": "https://res.cloudinary.com/dzgs1uhn0/image/upload/v1762191905/ampus_gisebw.png",
+      "imageUrl": "https://res.cloudinary.com/dzdf1wu5x/image/upload/v1772005693/Screenshot_2026-02-25_134738_yrcmn0.png",
       "imageHint": "event map"
     },
     {

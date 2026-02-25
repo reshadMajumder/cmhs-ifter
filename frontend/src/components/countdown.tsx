@@ -8,7 +8,7 @@ const Countdown = () => {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const difference = +new Date('2026-03-23T10:00:00') - +new Date();
+      const difference = +new Date('2026-03-18T10:00:00') - +new Date();
       let newTimeLeft: { [key: string]: number } = {};
 
       if (difference > 0) {
@@ -21,7 +21,7 @@ const Countdown = () => {
       }
       return newTimeLeft;
     };
-    
+
     setTimeLeft(calculateTimeLeft());
 
     const timer = setInterval(() => {
@@ -38,16 +38,16 @@ const Countdown = () => {
 
     return (
       <div key={interval} className="flex flex-col items-center">
-        <div className="text-4xl md:text-6xl font-bold text-white bg-white/10 p-4 rounded-lg shadow-inner w-20 h-20 md:w-24 md:h-24 flex items-center justify-center">
+        <div className="text-2xl md:text-4xl font-bold text-white glass-card p-2 rounded-lg w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
           {String(timeLeft[interval]).padStart(2, '0')}
         </div>
-        <div className="mt-2 text-sm md:text-lg font-medium uppercase tracking-wider text-white/80">{interval}</div>
+        <div className="mt-2 text-[10px] md:text-xs font-medium uppercase tracking-wider text-white/70">{interval}</div>
       </div>
     );
   });
 
   return (
-    <div className="flex justify-center space-x-2 md:space-x-8">
+    <div className="flex justify-center space-x-4 md:space-x-10">
       {timerComponents.length ? timerComponents : <span>Event has started!</span>}
     </div>
   );
