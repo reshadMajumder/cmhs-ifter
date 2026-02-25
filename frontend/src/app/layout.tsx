@@ -4,10 +4,10 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'CMHS GRAND IFTER MAHFIL 2026',
-  description: 'Joint us for the CMHS GRAND IFTER MAHFIL 2026.',
+  title: 'CMHS GRAND IFTAR MAHFIL 2026',
+  description: 'Join us for the CMHS GRAND IFTAR MAHFIL 2026.',
   icons: {
-    icon: '/favicon.ico',
+    icon: 'https://res.cloudinary.com/dzdf1wu5x/image/upload/v1771998698/Expressive_Graffiti_Logo_for_Ramadan_Iftar-removebg-preview_ixylto.png',
   },
 };
 

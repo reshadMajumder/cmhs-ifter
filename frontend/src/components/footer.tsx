@@ -12,7 +12,7 @@ export default function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <Logo className="h-10 w-10" />
               <span className="text-lg font-bold font-headline">
-                CMHS GRAND IFTER 2026
+                CMHS GRAND IFTAR 2026
               </span>
             </div>
             <p className="text-muted-foreground text-sm">

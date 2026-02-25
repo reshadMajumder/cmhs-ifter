@@ -58,17 +58,17 @@ const TicketCard = React.forwardRef<HTMLDivElement, TicketCardProps>(({
           <div className="relative z-10">
             <p className="text-sm font-light tracking-widest uppercase opacity-80">CMHS Association Presents</p>
             <h2 className={cn("text-5xl md:text-6xl mt-2", styles.headline)}>
-              Grand Ifter Mahfil 2026
+              Grand Iftar Mahfil 2026
             </h2>
           </div>
           <div className="relative z-10 mt-8 md:mt-0">
             <div className="bg-black/20 backdrop-blur-sm p-4 rounded-lg flex flex-col sm:flex-row justify-between gap-4 text-center">
               <div>
-                <p className="font-bold text-lg">Mar 23, 2026</p>
+                <p className="font-bold text-lg">Mar 18, 2026</p>
                 <p className="text-xs opacity-70">Date</p>
               </div>
               <div>
-                <p className="font-bold text-lg">10:00 AM</p>
+                <p className="font-bold text-lg">03:00 PM</p>
                 <p className="text-xs opacity-70">Time</p>
               </div>
               <div>

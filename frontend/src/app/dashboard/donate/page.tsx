@@ -8,7 +8,7 @@ export default function DonatePage() {
       <div className="lg:col-span-1">
         <Card>
           <CardHeader>
-            <CardTitle className="font-headline text-2xl">Support the Ifter Mahfil</CardTitle>
+            <CardTitle className="font-headline text-2xl">Support the Iftar Mahfil</CardTitle>
             <CardDescription>Your contribution makes this event memorable for everyone.</CardDescription>
           </CardHeader>
           <CardContent>

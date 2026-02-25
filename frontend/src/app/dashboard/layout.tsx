@@ -86,7 +86,7 @@ export default function DashboardLayout({
                   onClick={() => setIsSheetOpen(false)}
                 >
                   <Logo className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">CMHS GRAND IFTER</span>
+                  <span className="sr-only">CMHS GRAND IFTAR</span>
                 </Link>
                 {navItems.map((item) => (
                   <Link

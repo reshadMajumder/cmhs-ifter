@@ -12,8 +12,8 @@ interface RegisteredEventsProps {
 
 export default function RegisteredEvents({ hasDonation }: RegisteredEventsProps) {
   const event = {
-    name: 'CMHS GRAND IFTER MAHFIL 2026',
-    date: 'March 23, 2026',
+    name: 'CMHS GRAND IFTAR MAHFIL 2026',
+    date: 'March 18, 2026',
     tier: hasDonation ? 'Valued Contributor' : 'Alumni',
     paymentStatus: 'Paid',
   };
@@ -37,7 +37,7 @@ export default function RegisteredEvents({ hasDonation }: RegisteredEventsProps)
             <p className="text-sm text-green-600 font-bold">{event.paymentStatus}</p>
           </div>
         </div>
-        <div className="text-sm text-muted-foreground p-4 border rounded-lg bg-background">
+        {/* <div className="text-sm text-muted-foreground p-4 border rounded-lg bg-background">
           <h4 className="font-bold mb-2">What's Included:</h4>
           <ul className="list-disc list-inside space-y-1">
             <li>Full Access to All Reunion Events</li>
@@ -45,7 +45,7 @@ export default function RegisteredEvents({ hasDonation }: RegisteredEventsProps)
             <li>Exclusive Souvenir Kit</li>
             <li>Alumni Network Directory</li>
           </ul>
-        </div>
+        </div> */}
       </CardContent>
       <CardFooter>
         <Button asChild>

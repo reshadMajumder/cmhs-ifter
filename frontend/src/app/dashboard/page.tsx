@@ -70,7 +70,7 @@ export default function DashboardPage() {
           </div>
           <div className="text-center md:text-left">
             <h1 className="text-3xl font-extrabold font-headline tracking-tight text-foreground">
-              Hello, <span className="text-primary">{profileData.name.split(' ')[0]}</span>!
+              Hello{profileData.name ? <>, <span className="text-primary">{profileData.name.split(' ')[0]}</span></> : ''}!
             </h1>
             <p className="text-muted-foreground font-medium mt-1">
               Welcome back to your CMHS Grand Iftar Dashboard.

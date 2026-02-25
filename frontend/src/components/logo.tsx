@@ -11,7 +11,7 @@ export const Logo = ({ className }: LogoProps) => {
       <Image
         fill
         src="https://res.cloudinary.com/dzdf1wu5x/image/upload/v1771998698/Expressive_Graffiti_Logo_for_Ramadan_Iftar-removebg-preview_ixylto.png"
-        alt="CMHS GRAND IFTER MAHFIL 2026 Logo"
+        alt="CMHS GRAND IFTAR MAHFIL 2026 Logo"
         className="object-contain"
         unoptimized
       />
