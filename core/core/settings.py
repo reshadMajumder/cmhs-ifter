@@ -298,15 +298,16 @@ CSRF_COOKIE_SECURE = True
 
 
 CSRF_TRUSTED_ORIGINS = [
-        "https://rbhs-reunion-api.vercel.app",
+        "https://cmhs-ifter-api.vercel.app",
     ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8080",
-    "https://rbhs-reunion.vercel.app",
-    "https://rbmbians.com",
-    "https://www.rbmbians.com",
+    "https://cmhs-ifter.vercel.app",
+    "https://iftar.cmhsians.com",
+    
+
 ]
 
 if DEBUG:

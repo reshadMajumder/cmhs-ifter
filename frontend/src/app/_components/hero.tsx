@@ -31,7 +31,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 2, ease: "easeOut" }}
           className="font-invitation text-sm md:text-3xl lg:text-4xl text-amber-300 drop-shadow-glow mb-2 uppercase"
         >
-          CMHS GRAND IFTER MAHFIL 2026
+          CMHS GRAND IFTAR MAHFIL 2026
         </motion.h2>
 
         <motion.h1
