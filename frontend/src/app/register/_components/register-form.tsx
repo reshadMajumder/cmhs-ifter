@@ -162,7 +162,7 @@ export default function RegisterForm() {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                  <Input placeholder="Reshad Majumder" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -175,7 +175,7 @@ export default function RegisterForm() {
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="+880123456789" {...field} />
+                  <Input placeholder="+880162xxxxxxx" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -365,7 +365,7 @@ export default function RegisterForm() {
               </FormControl>
               <div className="space-y-1 leading-none">
                 <FormLabel>
-                  আমি এই মর্মে অঙ্গীকার করছি যে “রানীর বাজার মাধ্যমিক বিদ্যালয় গ্র্যান্ড রিইউনিয়ন ২০২৬” অনুষ্ঠানে বিদ্যালয়ের সকল নীতিমালা ও শৃঙ্খলা মেনে চলব এবং সেগুলোর প্রতি সর্বোচ্চ সম্মান প্রদর্শন করব।
+                  আমি এই মর্মে অঙ্গীকার করছি যে "কুমিল্লা মর্ডাণ হাই স্কুলের গ্র্যান্ড ইফতার মাহফিল ২০২৬” অনুষ্ঠানে বিদ্যালয়ের সকল নীতিমালা ও শৃঙ্খলা মেনে চলব এবং সেগুলোর প্রতি সর্বোচ্চ সম্মান প্রদর্শন করব।এবং আয়োজক কমিটির দিক নির্দেশনা মোতাবেক অনুষ্ঠানটিতে অংশগ্রহণ করবো।
                 </FormLabel>
                 <FormDescription>
                   বি: দ্র:- পরিস্থিতি স্বাপেক্ষে তারিখ পরিবর্তন হতে পারে

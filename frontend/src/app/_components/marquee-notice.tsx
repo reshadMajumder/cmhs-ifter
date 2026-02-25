@@ -2,7 +2,7 @@
 import { Megaphone } from "lucide-react";
 
 export default function MarqueeNotice() {
-  const noticeText = "Registration: November, 2025 - December 31, 2025.";
+  const noticeText = "Registration: February, 2026 - March 15, 2026.";
 
   return (
     <div className="bg-primary text-primary-foreground relative flex overflow-x-hidden py-3">
