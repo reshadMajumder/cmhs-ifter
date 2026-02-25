@@ -117,7 +117,7 @@ function RegistrationPaymentPageContent() {
                     </Alert>
                 </CardHeader>
                 <CardContent>
-                    <div className="mb-6">
+                    {/* <div className="mb-6">
                         <Image
                             src="https://res.cloudinary.com/dxz64hu1o/image/upload/v1761978329/bkash-payment-instruction_ahugej.png"
                             alt="bKash Payment Instructions"
@@ -126,14 +126,15 @@ function RegistrationPaymentPageContent() {
                             className="w-full h-auto rounded-lg border shadow-md"
                         />
                         <p className="text-xs text-muted-foreground text-center mt-2">Tap and hold to zoom</p>
-                    </div>
+                    </div> */}
                     <div className="mb-6 p-4 bg-muted rounded-lg text-sm space-y-4">
                         <p className="font-bold">Payment Instructions:</p>
                         <ol className="list-decimal list-inside space-y-3">
                             <li>Open your bKash App and select <span className="font-bold text-foreground">"Send Money"</span>.</li>
                             <li>
-                                <span >Enter the Phone number:</span>
-                                <CopyableText text="01627076527" />
+                                <span >Enter any of the following Phone number:</span>
+                                <CopyableText text="+8801851070809" />
+                                <CopyableText text="+8801938485079" />
                             </li>
                             <li>
                                 <span >Enter the amount:</span> <span className="font-bold text-bkash">{Number(amount).toLocaleString()}tk</span>

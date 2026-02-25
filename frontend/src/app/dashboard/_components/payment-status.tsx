@@ -101,7 +101,6 @@ export default function PaymentStatus({ payments, profile }: PaymentStatusProps)
                                 >
                                     <div>
                                         <p className="font-mono font-bold text-foreground text-base tracking-wider transition-colors group-hover:text-primary">01851070809</p>
-                                        <p className="text-[10px] opacity-60 uppercase tracking-widest font-bold">Atifur Rahman</p>
                                     </div>
                                     <Copy className="h-4 w-4 opacity-30 group-hover:opacity-100 transition-opacity text-primary" />
                                 </button>
@@ -115,7 +114,6 @@ export default function PaymentStatus({ payments, profile }: PaymentStatusProps)
                                 >
                                     <div>
                                         <p className="font-mono font-bold text-foreground text-base tracking-wider transition-colors group-hover:text-primary">01938485079</p>
-                                        <p className="text-[10px] opacity-60 uppercase tracking-widest font-bold">Atifur Rahman Bijoy</p>
                                     </div>
                                     <Copy className="h-4 w-4 opacity-30 group-hover:opacity-100 transition-opacity text-primary" />
                                 </button>

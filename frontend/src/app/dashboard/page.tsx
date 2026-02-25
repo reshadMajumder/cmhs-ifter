@@ -7,7 +7,6 @@ import { API_BASE_URL } from '@/lib/constants';
 import type { ProfileFormValues } from './profile/_components/profile-form';
 import { Skeleton } from '@/components/ui/skeleton';
 import PaymentStatus from './_components/payment-status';
-import UserProfile from './_components/user-profile';
 import TransactionHistory from './donate/_components/transaction-history';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LayoutDashboard } from 'lucide-react';
@@ -94,9 +93,8 @@ export default function DashboardPage() {
               <PaymentStatus payments={payments} profile={profileData} />
             </div>
 
-            {/* Person & Event Details */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {profileData && <UserProfile user={profileData} />}
+            {/* Event Details */}
+            <div className="w-full">
               <EventStatus />
             </div>
 
