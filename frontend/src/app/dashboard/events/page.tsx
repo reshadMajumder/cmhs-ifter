@@ -190,6 +190,7 @@ export default function EventsPage() {
     const [ticketData, setTicketData] = useState<TicketData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isDownloading, setIsDownloading] = useState(false);
     const ticketRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -216,7 +217,7 @@ export default function EventsPage() {
 
     const handleDownload = async () => {
         if (!ticketRef.current) return;
-
+        setIsDownloading(true);
         try {
             const createCanvas = async (mode: CaptureMode) =>
                 html2canvas(ticketRef.current!, {
@@ -250,14 +251,17 @@ export default function EventsPage() {
                         throw new Error(`Canvas output is blank in mode "${mode}"`);
                     }
                     triggerDownload(canvas);
+                    setIsDownloading(false);
                     return;
                 } catch (err) {
                     lastError = err;
                 }
             }
 
+            setIsDownloading(false);
             console.error('Ticket download failed:', lastError);
         } catch (err) {
+            setIsDownloading(false);
             console.error('Ticket download failed:', err);
         }
     };
@@ -275,7 +279,7 @@ export default function EventsPage() {
             <div>
                 <h1 className="text-3xl font-bold font-headline">My Event Ticket</h1>
                 <p className="text-muted-foreground">
-                    This is your official ticket for the reunion. You can download it or show this screen at the event.
+                    This is your official ticket for the CMHS Grand Iftar Mahfil 2026. You can download it or show this screen at the event.
                 </p>
             </div>
 
@@ -307,9 +311,21 @@ export default function EventsPage() {
                         />
                     </div>
                     <div className="text-center mt-6">
-                        <Button onClick={handleDownload}>
-                            <Download className="mr-2 h-5 w-5" />
-                            Download Ticket
+                        <Button onClick={handleDownload} disabled={isDownloading}>
+                            {isDownloading ? (
+                                <>
+                                    <svg className="animate-spin mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                    </svg>
+                                    Preparing...
+                                </>
+                            ) : (
+                                <>
+                                    <Download className="mr-2 h-5 w-5" />
+                                    Download Ticket
+                                </>
+                            )}
                         </Button>
                     </div>
                 </div>

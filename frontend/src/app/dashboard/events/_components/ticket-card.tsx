@@ -205,7 +205,7 @@ const TicketCard = React.forwardRef<HTMLDivElement, TicketCardProps>(({
 
             <div className="mb-6">
               <h2 className={cn("text-6xl tracking-tight leading-none mb-2", styles.headline)}>
-                Grand Iftar
+                CMHS Grand Iftar
               </h2>
               <div className="flex items-center gap-3">
                 <div className={cn("h-[1.5px] w-12 bg-gradient-to-r", styles.border)} />
