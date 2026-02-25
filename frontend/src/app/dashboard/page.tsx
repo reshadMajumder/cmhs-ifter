@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import UserProfile from './_components/user-profile';
 import EventStatus from './_components/event-status';
 import { fetchWithAuth } from '@/lib/api';
 import { API_BASE_URL } from '@/lib/constants';
 import type { ProfileFormValues } from './profile/_components/profile-form';
 import { Skeleton } from '@/components/ui/skeleton';
 import PaymentStatus from './_components/payment-status';
+import TransactionHistory from './donate/_components/transaction-history';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { LayoutDashboard } from 'lucide-react';
 
 interface Payment {
   id: number;
@@ -33,12 +35,12 @@ export default function DashboardPage() {
         }
         const profile = await profileResponse.json();
         setProfileData(profile);
-        
+
         if (paymentResponse.ok) {
           const paymentData = await paymentResponse.json();
           setPayments(paymentData);
         }
-        
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -50,35 +52,83 @@ export default function DashboardPage() {
 
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold font-headline">Welcome to Your Dashboard</h1>
-        <p className="text-muted-foreground">Here's an overview of your reunion details.</p>
-      </div>
-
-       {isLoading ? (
-        <div className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-8">
-                <Skeleton className="h-64" />
-                <Skeleton className="h-64" />
+    <div className="max-w-6xl mx-auto space-y-8">
+      {/* Profile Header */}
+      {!isLoading && profileData && (
+        <div className="flex flex-col md:flex-row items-center gap-6 mb-8 p-6 bg-accent/5 rounded-2xl border border-accent/10">
+          <div className="relative">
+            <div className="h-20 w-20 rounded-full border-4 border-primary/20 overflow-hidden shadow-xl">
+              <img
+                src={profileData.profile_image || 'https://github.com/shadcn.png'}
+                alt={profileData.name}
+                className="h-full w-full object-cover"
+              />
             </div>
-            <div className="space-y-8">
-                <Skeleton className="h-64" />
+            <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground text-[8px] font-bold px-2 py-0.5 rounded-full shadow-lg">
+              Batch {profileData.batch}
             </div>
           </div>
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl font-extrabold font-headline tracking-tight text-foreground">
+              Hello, <span className="text-primary">{profileData.name.split(' ')[0]}</span>!
+            </h1>
+            <p className="text-muted-foreground font-medium mt-1">
+              Welcome back to your CMHS Grand Iftar Dashboard.
+            </p>
+          </div>
         </div>
-      ) : (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <div className="space-y-8">
-          {profileData && <UserProfile user={profileData} />}
-          <EventStatus />
-        </div>
-        <div className="space-y-8">
-          <PaymentStatus payments={payments} profile={profileData} />
-        </div>
-      </div>
       )}
+
+      <div className="grid grid-cols-1 gap-8">
+        {isLoading ? (
+          <div className="space-y-8">
+            <Skeleton className="h-48 w-full rounded-2xl" />
+            <Skeleton className="h-64 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+          </div>
+        ) : (
+          <>
+            {/* Priority: Payment Status */}
+            <div className="order-first">
+              <PaymentStatus payments={payments} profile={profileData} />
+            </div>
+
+            {/* Event & Registration Details */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <EventStatus />
+              {/* Optional: Small Info Card or Quick Links */}
+              <div className="p-6 bg-card rounded-xl border shadow-sm flex flex-col justify-center">
+                <h3 className="font-bold text-lg mb-2">Need Help?</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Having trouble with registration or payment? Contact our support team.
+                </p>
+                <div className="flex gap-4">
+                  <a href="tel:+8801627076527" className="text-primary text-sm font-bold hover:underline">
+                    Call Support
+                  </a>
+                  <a href="/contact" className="text-primary text-sm font-bold hover:underline">
+                    Contact Us
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Transaction History Table */}
+            <Card className="mt-8 border-accent/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <LayoutDashboard className="h-5 w-5 text-primary" />
+                  Recent Transactions
+                </CardTitle>
+                <CardDescription>Your recent payments and donations for the reunion event.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TransactionHistory />
+              </CardContent>
+            </Card>
+          </>
+        )}
+      </div>
     </div>
   );
 }

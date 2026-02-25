@@ -7,7 +7,7 @@ import type { ProfileFormValues } from '../profile/_components/profile-form';
 
 
 interface UserProfileProps {
-    user: Partial<ProfileFormValues>
+  user: Partial<ProfileFormValues>
 }
 
 export default function UserProfile({ user }: UserProfileProps) {
@@ -19,7 +19,7 @@ export default function UserProfile({ user }: UserProfileProps) {
           <AvatarFallback>{user.name ? user.name.split(' ').map(n => n[0]).join('') : 'U'}</AvatarFallback>
         </Avatar>
         <CardTitle className="font-headline text-2xl">{user.name}</CardTitle>
-        <CardDescription>{user.is_guest ? 'Guest' : `Batch of ${user.batch}`}</CardDescription>
+        <CardDescription>Batch of {user.batch}</CardDescription>
       </CardHeader>
       <CardContent className="text-center">
         <p className="text-sm text-muted-foreground">{user.phone || 'No phone provided'}</p>

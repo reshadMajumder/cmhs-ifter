@@ -10,8 +10,7 @@ from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
-ADMIN_EMAIL = "rbmbreunion2026@gmail.com"
-
+ADMIN_EMAIL = "excmhsian@gmail.com"
 
 def _get_from_email() -> str:
     """Return a sensible from email address with fallbacks."""

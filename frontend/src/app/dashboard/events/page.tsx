@@ -14,15 +14,14 @@ import html2canvas from 'html2canvas';
 
 interface User {
     name: string;
+    batch: string;
 }
 
 interface TicketData {
     user: User;
     ticket_code: string;
     has_donation: boolean;
-    guests: number;
-    children: number;
-    ticket_type: 'Senior' | 'Junior' | 'Guest';
+    food_received: boolean;
 }
 
 export default function EventsPage() {
@@ -55,7 +54,7 @@ export default function EventsPage() {
 
     const handleDownload = () => {
         if (ticketRef.current) {
-            html2canvas(ticketRef.current, { 
+            html2canvas(ticketRef.current, {
                 useCORS: true,
                 backgroundColor: null // Make background transparent
             }).then(canvas => {
@@ -66,11 +65,13 @@ export default function EventsPage() {
             });
         }
     };
-    
-    const getTicketTypeForCard = (type: 'Senior' | 'Junior' | 'Guest') => {
-        if (type === 'Senior') return 'Vintage RBMBIAN';
-        if (type === 'Junior') return 'New Generation';
-        return 'Golden Era'; // Fallback for Guest or other types
+
+    const getTicketTypeForCard = (batchStr: string) => {
+        const batch = parseInt(batchStr);
+        if (isNaN(batch)) return 'Modern CMHSIAN';
+        // Senior if batch <= 2012
+        if (batch <= 2012) return 'Vintage CMHSIAN';
+        return 'Modern CMHSIAN';
     }
 
     return (
@@ -97,14 +98,12 @@ export default function EventsPage() {
                     </AlertDescription>
                 </Alert>
             ) : ticketData ? (
-                 <div className="space-y-8">
+                <div className="space-y-8">
                     <div className="flex justify-center">
-                        <TicketCard 
+                        <TicketCard
                             ref={ticketRef}
                             alumniName={ticketData.user.name}
-                            ticketType={getTicketTypeForCard(ticketData.ticket_type)}
-                            guestCount={ticketData.guests}
-                            childCount={ticketData.children}
+                            ticketType={getTicketTypeForCard(ticketData.user.batch)}
                             secretCode={ticketData.ticket_code}
                             isDonator={ticketData.has_donation}
                         />
@@ -117,6 +116,6 @@ export default function EventsPage() {
                     </div>
                 </div>
             ) : null}
-      </div>
+        </div>
     )
 }

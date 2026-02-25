@@ -8,31 +8,23 @@ import QRCode from 'qrcode.react';
 import { Users, Baby, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type TicketType = 'New Generation' | 'Golden Era' | 'Vintage RBMBIAN' | 'Premium';
+type TicketType = 'Modern CMHSIAN' | 'Vintage CMHSIAN' | 'Premium';
 
 interface TicketCardProps {
   alumniName: string;
   ticketType: TicketType;
-  guestCount: number;
-  childCount: number;
   secretCode: string;
   isDonator: boolean;
 }
 
 const ticketStyles: Record<TicketType, { bg: string, text: string, badge: string, headline: string }> = {
-  'New Generation': {
+  'Modern CMHSIAN': {
     bg: 'from-cyan-800 via-teal-800 to-green-800',
     text: 'text-white',
     badge: 'bg-cyan-500 text-white',
     headline: 'font-bold font-headline'
   },
-  'Golden Era': {
-    bg: 'from-amber-700 via-yellow-800 to-orange-900',
-    text: 'text-white',
-    badge: 'bg-amber-500 text-black',
-    headline: 'font-bold font-headline'
-  },
-  'Vintage RBMBIAN': {
+  'Vintage CMHSIAN': {
     bg: 'from-purple-900 via-indigo-800 to-purple-900',
     text: 'text-white',
     badge: 'bg-purple-400 text-purple-900',
@@ -49,8 +41,6 @@ const ticketStyles: Record<TicketType, { bg: string, text: string, badge: string
 const TicketCard = React.forwardRef<HTMLDivElement, TicketCardProps>(({
   alumniName,
   ticketType,
-  guestCount,
-  childCount,
   secretCode,
   isDonator,
 }, ref) => {
@@ -106,16 +96,7 @@ const TicketCard = React.forwardRef<HTMLDivElement, TicketCardProps>(({
               </div>
             )}
 
-            <div className="flex gap-4 my-2 text-sm">
-              <div className="flex items-center gap-1.5">
-                <Users className="h-4 w-4" />
-                <span>{guestCount} Guest{guestCount !== 1 && 's'}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Baby className="h-4 w-4" />
-                <span>{childCount} Child{childCount !== 1 && 'ren'}</span>
-              </div>
-            </div>
+
 
             <div className="bg-white p-2 rounded-lg shadow-md inline-block my-2">
               <QRCode value={secretCode} size={128} level="H" bgColor="#FFFFFF" fgColor="#000000" />
