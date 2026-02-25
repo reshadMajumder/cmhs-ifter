@@ -14,9 +14,9 @@ interface Sponsor {
 }
 
 const EmptySponsorSlot = () => (
-    <div className="flex flex-col items-center justify-center gap-4 w-40 h-32 p-4 bg-muted/50 rounded-lg border-2 border-dashed border-border">
-        <span className="text-sm text-muted-foreground">Sponsor Slot</span>
-    </div>
+  <div className="flex flex-col items-center justify-center gap-4 w-32 h-32 p-4 rounded-full border-2 border-dashed border-border group hover:border-primary/40 transition-colors">
+    <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-center">Open<br />Slot</span>
+  </div>
 );
 
 export default function Sponsors() {
@@ -44,37 +44,39 @@ export default function Sponsors() {
   return (
     <section className="py-20">
       <div className="container mx-auto text-center">
-        <h2 className="text-4xl md:text-5xl font-bold font-headline mb-4">Our Valued Sponsors</h2>
+        <h2 className="text-4xl md:text-5xl font-bold font-headline mb-4 text-foreground">Our Valued Sponsors</h2>
         <p className="text-lg text-muted-foreground mb-12">This event is made possible by their generous support.</p>
-        
-        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
+
+        <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-12">
           {isLoading ? (
             Array.from({ length: 6 }).map((_, index) => (
-                <div key={index} className="flex flex-col items-center gap-4">
-                    <Skeleton className="h-20 w-32" />
-                    <Skeleton className="h-6 w-24" />
-                </div>
+              <div key={index} className="flex flex-col items-center gap-4">
+                <Skeleton className="h-32 w-32 rounded-full" />
+                <Skeleton className="h-4 w-24" />
+              </div>
             ))
           ) : sponsors.length > 0 ? (
             sponsors.map((sponsor) => (
-             sponsor.logo && (
-                <div key={sponsor.id} className="flex flex-col items-center gap-4 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300 w-40">
-                    <div className="relative h-20 w-32">
+              sponsor.logo && (
+                <div key={sponsor.id} className="flex flex-col items-center gap-4 group w-32">
+                  <div className="relative h-32 w-32 rounded-full border-2 border-primary/10 shadow-sm group-hover:shadow-md group-hover:border-primary/30 transition-all duration-300 overflow-hidden flex items-center justify-center">
                     <Image
-                        src={sponsor.logo}
-                        alt={`${sponsor.name} logo`}
-                        fill
-                        className="object-contain"
-                        />
-                    </div>
-                    <span className="font-semibold text-muted-foreground capitalize">{sponsor.name}</span>
+                      src={sponsor.logo}
+                      alt={`${sponsor.name} logo`}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110 rounded-full"
+                    />
+                  </div>
+                  <span className="font-bold text-sm text-black capitalize text-center leading-tight group-hover:text-primary transition-colors">{sponsor.name}</span>
                 </div>
               )
             ))
           ) : (
-             Array.from({ length: 4 }).map((_, index) => (
+            <div className="flex flex-wrap items-center justify-center gap-12">
+              {Array.from({ length: 4 }).map((_, index) => (
                 <EmptySponsorSlot key={index} />
-             ))
+              ))}
+            </div>
           )}
         </div>
       </div>
