@@ -327,6 +327,10 @@ export default function EventsPage() {
                                 </>
                             )}
                         </Button>
+                        <p className="text-sm text-muted-foreground mt-2">
+                            টিকেট ডাউনলোড করার জন্য আপনারা অবশ্যই গুগুল ক্রোম (Google Crome) ব্রাউজার ব্যবহার করবেন।এবং টিকেট ডাউনলোড হওয়ার জন্য অনুগ্রহ করে অপেক্ষা করুন।ধন্যবাদ।
+                        </p>
+                        
                     </div>
                 </div>
             ) : null}
