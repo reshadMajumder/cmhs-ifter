@@ -528,7 +528,7 @@ export default function EventsPage() {
                                     </>
                                 )}
                             </Button>
-                            <Button variant="outline" onClick={handleServerDownload} disabled={isServerDownloading}>
+                            {/* <Button variant="outline" onClick={handleServerDownload} disabled={isServerDownloading}>
                                 {isServerDownloading ? (
                                     <>
                                         <svg className="animate-spin mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -543,7 +543,7 @@ export default function EventsPage() {
                                         Server Image
                                     </>
                                 )}
-                            </Button>
+                            </Button> */}
                         </div>
                         <p className="text-sm text-muted-foreground">
                             <strong>Android users:</strong> Use Google Chrome browser for best results.<br />
