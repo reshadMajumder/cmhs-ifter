@@ -191,6 +191,7 @@ export default function EventsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isDownloading, setIsDownloading] = useState(false);
+    const [isServerDownloading, setIsServerDownloading] = useState(false);
     const ticketRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -424,6 +425,47 @@ export default function EventsPage() {
         }
     };
 
+    const handleServerDownload = async () => {
+        setIsServerDownloading(true);
+        try {
+            const response = await fetchWithAuth(`${API_BASE_URL}/api/ticket/generate-image/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to request server-rendered ticket.');
+            }
+
+            const data = await response.json();
+            if (!data?.image_url) {
+                throw new Error('Ticket image URL not found in response.');
+            }
+
+            const imageUrl: string = data.image_url;
+            const filename = `cmhs-grand-iftar-ticket-${data.ticket_code || ticketData?.ticket_code || 'image'}.png`;
+
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = filename;
+            link.rel = 'noopener';
+            link.target = '_blank';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+        } catch (error) {
+            console.error(error);
+            alert(error instanceof Error ? error.message : 'Could not download ticket from server.');
+        } finally {
+            setIsServerDownloading(false);
+        }
+    };
+
     const getTicketTypeForCard = (batchStr: string) => {
         const batch = parseInt(batchStr);
         if (isNaN(batch)) return 'Modern CMHSIAN';
@@ -468,29 +510,49 @@ export default function EventsPage() {
                             batch={ticketData.user.batch}
                         />
                     </div>
-                    <div className="text-center mt-6">
-                        <Button onClick={handleDownload} disabled={isDownloading}>
-                            {isDownloading ? (
-                                <>
-                                    <svg className="animate-spin mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                                    </svg>
-                                    Preparing...
-                                </>
-                            ) : (
-                                <>
-                                    <Download className="mr-2 h-5 w-5" />
-                                    Download Ticket
-                                </>
-                            )}
-                        </Button>
-                        <p className="text-sm text-muted-foreground mt-2">
+                    <div className="text-center mt-6 space-y-3">
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                            <Button onClick={handleDownload} disabled={isDownloading}>
+                                {isDownloading ? (
+                                    <>
+                                        <svg className="animate-spin mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                        </svg>
+                                        Preparing...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="mr-2 h-5 w-5" />
+                                        Download Ticket
+                                    </>
+                                )}
+                            </Button>
+                            <Button variant="outline" onClick={handleServerDownload} disabled={isServerDownloading}>
+                                {isServerDownloading ? (
+                                    <>
+                                        <svg className="animate-spin mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                        </svg>
+                                        Generating...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="mr-2 h-5 w-5" />
+                                        Server Image
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
                             <strong>Android users:</strong> Use Google Chrome browser for best results.<br />
                             <strong>iPhone/iPad users:</strong> The ticket will open in a new tab. Tap and hold the image to save to Photos.<br />
                             টিকেট ডাউনলোড করার জন্য অপেক্ষা করুন। iPhone এ ছবিটি ধরে রেখে "Save to Photos" সিলেক্ট করুন।
                         </p>
-
+                        <p className="text-xs text-muted-foreground">
+                            Need the ultra-high resolution Cloudinary render? Use "Server Image" and the ticket will be generated directly by our backend.
+                        </p>
                     </div>
                 </div>
             ) : null}
