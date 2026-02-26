@@ -219,6 +219,10 @@ export default function EventsPage() {
         if (!ticketRef.current) return;
         setIsDownloading(true);
 
+        // Detect iOS devices
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || 
+                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
         const createCanvas = async (mode: CaptureMode) =>
             html2canvas(ticketRef.current!, {
                 useCORS: true,
@@ -233,6 +237,112 @@ export default function EventsPage() {
             });
 
         try {
+            await waitForTicketImages(ticketRef.current);
+
+            // For iOS devices, directly open in new tab
+            if (isIOS) {
+                const canvas = await createCanvas('normal');
+                const dataUrl = canvas.toDataURL('image/png', 1.0);
+                const newWindow = window.open('', '_blank');
+                
+                if (newWindow) {
+                    newWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Your Ticket - CMHS Grand Iftar</title>
+                                <style>
+                                    body {
+                                        margin: 0;
+                                        padding: 20px;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        justify-content: center;
+                                        background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%);
+                                        color: white;
+                                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                                        min-height: 100vh;
+                                    }
+                                    .container {
+                                        max-width: 100%;
+                                        text-align: center;
+                                    }
+                                    h1 {
+                                        font-size: 24px;
+                                        margin-bottom: 10px;
+                                        color: #87CEEB;
+                                    }
+                                    p {
+                                        font-size: 16px;
+                                        margin: 15px 20px;
+                                        line-height: 1.6;
+                                        color: #e0e0e0;
+                                    }
+                                    .instructions {
+                                        background: rgba(255, 255, 255, 0.1);
+                                        border-radius: 12px;
+                                        padding: 20px;
+                                        margin: 20px 0;
+                                        border: 1px solid rgba(255, 255, 255, 0.2);
+                                    }
+                                    .step {
+                                        text-align: left;
+                                        margin: 10px 0;
+                                        padding-left: 10px;
+                                    }
+                                    img {
+                                        max-width: 100%;
+                                        height: auto;
+                                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+                                        border-radius: 12px;
+                                        margin: 20px 0;
+                                    }
+                                    .button {
+                                        margin-top: 20px;
+                                        padding: 12px 24px;
+                                        background: #5d3a7a;
+                                        border: none;
+                                        color: white;
+                                        border-radius: 8px;
+                                        font-size: 16px;
+                                        cursor: pointer;
+                                        transition: background 0.3s;
+                                    }
+                                    .button:hover {
+                                        background: #7a4d9e;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <h1>🎫 Your CMHS Grand Iftar Ticket</h1>
+                                    <div class="instructions">
+                                        <p><strong>How to save your ticket on iPhone/iPad:</strong></p>
+                                        <div class="step">1️⃣ Tap and hold on the ticket image below</div>
+                                        <div class="step">2️⃣ Select "Save to Photos" or "Add to Photos"</div>
+                                        <div class="step">3️⃣ The ticket will be saved to your photo library</div>
+                                    </div>
+                                    <img src="${dataUrl}" alt="Your CMHS Grand Iftar Ticket" id="ticketImage">
+                                    <p style="font-size: 14px; opacity: 0.8; margin-top: 20px;">
+                                        টিকেটটি সংরক্ষণ করতে ছবিটির উপর চাপ দিয়ে ধরে রাখুন এবং "Save to Photos" নির্বাচন করুন
+                                    </p>
+                                    <button class="button" onclick="window.close()">Close</button>
+                                </div>
+                            </body>
+                        </html>
+                    `);
+                    newWindow.document.close();
+                } else {
+                    alert("Please enable popups for this site to download your ticket, or take a screenshot of the ticket on this page.");
+                }
+                setIsDownloading(false);
+                return;
+            }
+
+            // For Android and other devices, use the download approach
             const triggerDownload = (canvas: HTMLCanvasElement): Promise<void> => {
                 return new Promise((resolve, reject) => {
                     canvas.toBlob((blob) => {
@@ -258,8 +368,6 @@ export default function EventsPage() {
                     }, 'image/png', 1.0);
                 });
             };
-
-            await waitForTicketImages(ticketRef.current);
 
             const modes: CaptureMode[] = ['normal', 'strip-url-layers', 'aggressive'];
             let lastError: unknown;
@@ -287,18 +395,24 @@ export default function EventsPage() {
             try {
                 const canvas = await createCanvas('aggressive');
                 const dataUrl = canvas.toDataURL('image/png');
-                const newWindow = window.open();
+                const newWindow = window.open('', '_blank');
                 if (newWindow) {
                     newWindow.document.write(`
+                        <!DOCTYPE html>
                         <html>
-                            <head><title>Your Ticket - CMHS Grand Iftar</title></head>
-                            <body style="margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#1a1a1a; color:white; font-family:sans-serif;">
-                                <p style="margin:20px;">Your ticket is ready! Long press the image to save it.</p>
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Your Ticket - CMHS Grand Iftar</title>
+                            </head>
+                            <body style="margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#1a1a1a; color:white; font-family:sans-serif; min-height:100vh;">
+                                <p style="margin:20px; font-size:16px;">Your ticket is ready! Long press the image to save it.</p>
                                 <img src="${dataUrl}" style="max-width:100%; height:auto; box-shadow:0 10px 30px rgba(0,0,0,0.5); border-radius:12px;">
-                                <button onclick="window.close()" style="margin-top:20px; padding:10px 20px; background:#5d3a7a; border:none; color:white; border-radius:6px; cursor:pointer;">Close</button>
+                                <button onclick="window.close()" style="margin-top:20px; padding:10px 20px; background:#5d3a7a; border:none; color:white; border-radius:6px; cursor:pointer; font-size:16px;">Close</button>
                             </body>
                         </html>
                     `);
+                    newWindow.document.close();
                 } else {
                     alert("Ticket generated but popup was blocked. Please allow popups and try again, or take a screenshot.");
                 }
@@ -372,7 +486,9 @@ export default function EventsPage() {
                             )}
                         </Button>
                         <p className="text-sm text-muted-foreground mt-2">
-                            টিকেট ডাউনলোড করার জন্য আপনারা অবশ্যই গুগুল ক্রোম (Google Crome) ব্রাউজার ব্যবহার করবেন।এবং টিকেট ডাউনলোড হওয়ার জন্য অনুগ্রহ করে অপেক্ষা করুন।ধন্যবাদ।
+                            <strong>Android users:</strong> Use Google Chrome browser for best results.<br />
+                            <strong>iPhone/iPad users:</strong> The ticket will open in a new tab. Tap and hold the image to save to Photos.<br />
+                            টিকেট ডাউনলোড করার জন্য অপেক্ষা করুন। iPhone এ ছবিটি ধরে রেখে "Save to Photos" সিলেক্ট করুন।
                         </p>
 
                     </div>
