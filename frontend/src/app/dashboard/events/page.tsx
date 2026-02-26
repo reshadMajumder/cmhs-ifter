@@ -218,25 +218,45 @@ export default function EventsPage() {
     const handleDownload = async () => {
         if (!ticketRef.current) return;
         setIsDownloading(true);
-        try {
-            const createCanvas = async (mode: CaptureMode) =>
-                html2canvas(ticketRef.current!, {
-                    useCORS: true,
-                    allowTaint: false,
-                    backgroundColor: mode === 'aggressive' ? '#2d1b4e' : null,
-                    scale: 2,
-                    logging: false,
-                    imageTimeout: 15000,
-                    ignoreElements: (element) =>
-                        element instanceof HTMLCanvasElement && (element.width === 0 || element.height === 0),
-                    onclone: (clonedDoc) => sanitizeClonedTicket(clonedDoc, mode),
-                });
 
-            const triggerDownload = (canvas: HTMLCanvasElement) => {
-                const link = document.createElement('a');
-                link.download = 'reunion-ticket.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
+        const createCanvas = async (mode: CaptureMode) =>
+            html2canvas(ticketRef.current!, {
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: mode === 'aggressive' ? '#2d1b4e' : null,
+                scale: 2,
+                logging: false,
+                imageTimeout: 15000,
+                ignoreElements: (element) =>
+                    element instanceof HTMLCanvasElement && (element.width === 0 || element.height === 0),
+                onclone: (clonedDoc) => sanitizeClonedTicket(clonedDoc, mode),
+            });
+
+        try {
+            const triggerDownload = (canvas: HTMLCanvasElement): Promise<void> => {
+                return new Promise((resolve, reject) => {
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            reject(new Error('Canvas to Blob conversion failed'));
+                            return;
+                        }
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `cmhs-giftar-ticket-${ticketData?.user.name.toLowerCase().replace(/\s+/g, '-') || 'download'}.png`;
+
+                        // Append to body for better mobile support
+                        document.body.appendChild(link);
+                        link.click();
+
+                        // Cleanup
+                        setTimeout(() => {
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(url);
+                            resolve();
+                        }, 200);
+                    }, 'image/png', 1.0);
+                });
             };
 
             await waitForTicketImages(ticketRef.current);
@@ -250,7 +270,7 @@ export default function EventsPage() {
                     if (!isCanvasVisuallyValid(canvas)) {
                         throw new Error(`Canvas output is blank in mode "${mode}"`);
                     }
-                    triggerDownload(canvas);
+                    await triggerDownload(canvas);
                     setIsDownloading(false);
                     return;
                 } catch (err) {
@@ -258,11 +278,35 @@ export default function EventsPage() {
                 }
             }
 
-            setIsDownloading(false);
-            console.error('Ticket download failed:', lastError);
+            // If it reached here, it means all modes failed in the loop
+            throw lastError || new Error('All download attempts failed');
+
         } catch (err) {
+            // If all modes fail, try one last direct-to-new-tab fallback
+            console.error('Ticket download failed, trying fallback:', err);
+            try {
+                const canvas = await createCanvas('aggressive');
+                const dataUrl = canvas.toDataURL('image/png');
+                const newWindow = window.open();
+                if (newWindow) {
+                    newWindow.document.write(`
+                        <html>
+                            <head><title>Your Ticket - CMHS Grand Iftar</title></head>
+                            <body style="margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#1a1a1a; color:white; font-family:sans-serif;">
+                                <p style="margin:20px;">Your ticket is ready! Long press the image to save it.</p>
+                                <img src="${dataUrl}" style="max-width:100%; height:auto; box-shadow:0 10px 30px rgba(0,0,0,0.5); border-radius:12px;">
+                                <button onclick="window.close()" style="margin-top:20px; padding:10px 20px; background:#5d3a7a; border:none; color:white; border-radius:6px; cursor:pointer;">Close</button>
+                            </body>
+                        </html>
+                    `);
+                } else {
+                    alert("Ticket generated but popup was blocked. Please allow popups and try again, or take a screenshot.");
+                }
+            } catch (fallbackErr) {
+                console.error('Fallback also failed:', fallbackErr);
+                alert("Sorry, we couldn't generate the ticket for download. Please try taking a screenshot of the ticket on your screen.");
+            }
             setIsDownloading(false);
-            console.error('Ticket download failed:', err);
         }
     };
 
@@ -330,7 +374,7 @@ export default function EventsPage() {
                         <p className="text-sm text-muted-foreground mt-2">
                             টিকেট ডাউনলোড করার জন্য আপনারা অবশ্যই গুগুল ক্রোম (Google Crome) ব্রাউজার ব্যবহার করবেন।এবং টিকেট ডাউনলোড হওয়ার জন্য অনুগ্রহ করে অপেক্ষা করুন।ধন্যবাদ।
                         </p>
-                        
+
                     </div>
                 </div>
             ) : null}
