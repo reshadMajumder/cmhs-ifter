@@ -51,7 +51,7 @@ const registerFormSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
-const batchYears = Array.from({ length: 2025 - 1998 + 1 }, (_, i) => String(1998 + i)).reverse();
+const batchYears = Array.from({ length: 2026 - 1998 + 1 }, (_, i) => String(1998 + i)).reverse();
 
 
 export default function RegisterForm() {
