@@ -281,7 +281,7 @@ JAZZMIN_SETTINGS = {
     "logo_icon": None,
     
     # Copyright
-    "copyright": "RBMB Reunion 2025",
+    "copyright": "CMHS ALUMNI ASSOSIATION 2026",
 }
 
 

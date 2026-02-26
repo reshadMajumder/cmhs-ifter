@@ -13,10 +13,24 @@ function isTokenExpired(token: string): boolean {
     }
 }
 
+function isRefreshTokenExpired(token: string): boolean {
+    // Same logic as access token, since refresh tokens are also JWTs
+    return isTokenExpired(token);
+}
+
 async function refreshAccessToken(): Promise<string | null> {
-    const refreshToken = localStorage.getItem('refreshToken');
+    let refreshToken = localStorage.getItem('refreshToken');
     if (!refreshToken) {
         console.error("No refresh token available");
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('isLoggedIn');
+        return null;
+    }
+
+    // Check if refresh token is expired before attempting refresh
+    if (isRefreshTokenExpired(refreshToken)) {
+        console.error("Refresh token expired");
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('isLoggedIn');
@@ -43,6 +57,14 @@ async function refreshAccessToken(): Promise<string | null> {
         // The API might also return a new refresh token, handle that if necessary
         if (data.refresh) {
             localStorage.setItem('refreshToken', data.refresh);
+            // If new refresh token is provided, check if it's expired and try again
+            if (isRefreshTokenExpired(data.refresh)) {
+                // If new refresh token is expired, logout
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                localStorage.removeItem('isLoggedIn');
+                return null;
+            }
         }
 
         return newAccessToken;
@@ -52,18 +74,27 @@ async function refreshAccessToken(): Promise<string | null> {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('isLoggedIn');
-        // window.location.href = '/login';
         return null;
     }
 }
 
 export async function getAccessToken(): Promise<string | null> {
     let accessToken = localStorage.getItem('accessToken');
+    let refreshToken = localStorage.getItem('refreshToken');
 
+    // If access token is missing or expired, try to refresh
     if (!accessToken || isTokenExpired(accessToken)) {
-        accessToken = await refreshAccessToken();
+        // Only try refresh if refresh token is present and not expired
+        if (refreshToken && !isRefreshTokenExpired(refreshToken)) {
+            accessToken = await refreshAccessToken();
+        } else {
+            // If refresh token is missing or expired, logout
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('isLoggedIn');
+            return null;
+        }
     }
-
     return accessToken;
 }
 
