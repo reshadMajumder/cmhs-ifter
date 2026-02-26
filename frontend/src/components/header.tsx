@@ -91,12 +91,30 @@ export default function Header() {
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  const authButton = isLoggedIn ? (
-    <Button variant="ghost" asChild size="lg" className="w-full sm:w-auto text-white hover:bg-white/10 hover:text-white" onClick={closeMenu}>
+  const authButton = (isMobile: boolean) => isLoggedIn ? (
+    <Button
+      variant={isMobile ? "outline" : "ghost"}
+      asChild
+      size="lg"
+      className={cn(
+        "w-full sm:w-auto",
+        !isMobile ? "text-white hover:bg-white/10 hover:text-white" : "border-black text-black hover:bg-black/5"
+      )}
+      onClick={closeMenu}
+    >
       <Link href="/dashboard"><LayoutDashboard className="mr-2 h-5 w-5" />Dashboard</Link>
     </Button>
   ) : (
-    <Button variant="ghost" asChild size="lg" className="w-full sm:w-auto text-white hover:bg-white/10 hover:text-white" onClick={closeMenu}>
+    <Button
+      variant={isMobile ? "outline" : "ghost"}
+      asChild
+      size="lg"
+      className={cn(
+        "w-full sm:w-auto",
+        !isMobile ? "text-white hover:bg-white/10 hover:text-white" : "border-black text-black hover:bg-black/5"
+      )}
+      onClick={closeMenu}
+    >
       <Link href="/login"><LogIn className="mr-2 h-5 w-5" />Login</Link>
     </Button>
   );
@@ -105,17 +123,22 @@ export default function Header() {
     <header
       className={cn(
         'absolute top-0 z-40 w-full transition-all duration-300',
-        isMenuOpen ? 'bg-background/95 shadow-md backdrop-blur-sm' : 'bg-black/10 backdrop-blur-sm',
+        isMenuOpen ? 'bg-white shadow-xl' : 'bg-black/10 backdrop-blur-sm',
         isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
       )}
     >
       <div className="container mx-auto px-4 flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3" onClick={closeMenu}>
           <Logo className="h-10 w-10 transition-transform hover:scale-110" />
-          <h1 className="hidden text-xl font-bold tracking-tight text-white sm:block font-headline">
+          <h1 className={cn(
+            "hidden text-xl font-bold tracking-tight sm:block font-headline transition-colors",
+            isMenuOpen ? "text-black" : "text-white"
+          )}>
             CMHSians
           </h1>
         </Link>
+
+        {/* Desktop Navigation */}
         <div className="hidden sm:flex items-center gap-2">
           <Button variant="ghost" asChild className="text-white hover:bg-white/10 hover:text-white">
             <Link href="/contact"><MessageSquare className="mr-2 h-4 w-4" /> Contact Us</Link>
@@ -123,30 +146,43 @@ export default function Header() {
           <Button variant="ghost" asChild className="text-white hover:bg-white/10 hover:text-white">
             <Link href="/dashboard/donate"><Heart className="mr-2 h-4 w-4" /> Donate</Link>
           </Button>
-          {authButton}
+          {authButton(false)}
           {isLoggedIn && (
             <Button variant="ghost" onClick={handleLogout} className="text-white hover:bg-white/10 hover:text-white">Logout</Button>
           )}
         </div>
+
+        {/* Mobile Toggle */}
         <div className="sm:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white hover:bg-white/10 hover:text-white">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className={cn(
+              "transition-colors",
+              isMenuOpen ? "text-black hover:bg-black/10" : "text-white hover:bg-white/10"
+            )}
+          >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             <span className="sr-only">Toggle menu</span>
           </Button>
         </div>
       </div>
+
+      {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="sm:hidden p-4 border-t">
+        <div className="sm:hidden p-6 border-t border-gray-100 bg-white animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="flex flex-col gap-4">
-            <Button variant="outline" asChild className="w-full" onClick={closeMenu}>
+            <Button variant="outline" asChild className="w-full justify-start border-gray-200 text-black hover:bg-black/5" onClick={closeMenu}>
               <Link href="/contact"><MessageSquare className="mr-2 h-4 w-4" /> Contact Us</Link>
             </Button>
-            <Button variant="outline" asChild className="w-full" onClick={closeMenu}>
+            <Button variant="outline" asChild className="w-full justify-start border-gray-200 text-black hover:bg-black/5" onClick={closeMenu}>
               <Link href="/dashboard/donate"><Heart className="mr-2 h-4 w-4" /> Donate</Link>
             </Button>
-            {authButton}
+            <div className="h-px bg-gray-100 my-2" />
+            {authButton(true)}
             {isLoggedIn && (
-              <Button variant="outline" className="w-full" onClick={handleLogout}>Logout</Button>
+              <Button variant="outline" className="w-full justify-start border-rose-200 text-rose-600 hover:bg-rose-50" onClick={handleLogout}>Logout</Button>
             )}
           </div>
         </div>
