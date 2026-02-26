@@ -22,7 +22,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     GENDER_CHOICES = [('male','Male'),('female','Female'),('other','Other')]
     RELIGION_CHOICES = [('islam','Islam'),('hinduism','Hinduism'),('christianity','Christianity'),('buddhism','Buddhism'),('other','Other')]
     TSHIRT_SIZE_CHOICES = [('S','S'),('M','M'),('L','L'),('XL','XL'),('XXL','XXL')]
-    BATCH_CHOICES = [(str(year), str(year)) for year in range(1998, 2026)]
+    BATCH_CHOICES = [(str(year), str(year)) for year in range(1998, 2027)]
 
 
     phone = models.CharField(max_length=15, unique=True)
