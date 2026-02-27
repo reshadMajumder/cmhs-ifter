@@ -186,6 +186,24 @@ const sanitizeClonedTicket = (clonedDoc: Document, mode: CaptureMode) => {
     });
 };
 
+const openTicketPreviewTab = (dataUrl: string, fileName: string, options?: { isIOS?: boolean }) => {
+    const previewWindow = window.open('', '_blank');
+    if (!previewWindow) {
+        return false;
+    }
+
+    const primaryInstruction = options?.isIOS
+        ? 'Tap and hold the ticket image to save it to Photos.'
+        : 'Right-click or long press the ticket image to save it manually.';
+    const secondaryInstruction = options?.isIOS
+        ? 'If the download button does not work, use the Share sheet after long pressing the image.'
+        : 'If the automatic download does not start, use the Download Ticket button below.';
+
+    previewWindow.document.write(`\n        <!DOCTYPE html>\n        <html lang="en">\n            <head>\n                <meta charset="UTF-8" />\n                <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n                <title>Your CMHS Ticket</title>\n                <style>\n                    :root {\n                        color-scheme: dark;\n                    }\n                    body {\n                        margin: 0;\n                        min-height: 100vh;\n                        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;\n                        background: radial-gradient(circle at top, #2d1b4e, #0f0f18 70%);\n                        display: flex;\n                        align-items: center;\n                        justify-content: center;\n                        padding: 32px;\n                        color: #f1f5f9;\n                    }\n                    .wrapper {\n                        width: min(920px, 100%);\n                        display: flex;\n                        flex-direction: column;\n                        align-items: center;\n                        gap: 24px;\n                        text-align: center;\n                    }\n                    img {\n                        width: 100%;\n                        height: auto;\n                        border-radius: 20px;\n                        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);\n                    }\n                    .instructions {\n                        font-size: 15px;\n                        line-height: 1.6;\n                        opacity: 0.85;\n                    }\n                    .actions {\n                        display: flex;\n                        gap: 12px;\n                        flex-wrap: wrap;\n                        justify-content: center;\n                    }\n                    a.button {\n                        display: inline-flex;\n                        align-items: center;\n                        justify-content: center;\n                        padding: 12px 24px;\n                        border-radius: 999px;\n                        background: linear-gradient(120deg, #5d3a7a, #7c4d99);\n                        color: white;\n                        text-decoration: none;\n                        font-weight: 600;\n                        box-shadow: 0 10px 25px rgba(93, 58, 122, 0.4);\n                    }\n                    .hint {\n                        font-size: 13px;\n                        opacity: 0.7;\n                    }\n                </style>\n            </head>\n            <body>\n                <div class="wrapper">\n                    <h1 style="margin:0;font-size:26px;letter-spacing:0.08em;text-transform:uppercase;color:#bae6fd;">CMHS Grand Iftar Ticket</h1>\n                    <p class="instructions">${primaryInstruction}<br/>${secondaryInstruction}</p>\n                    <img src="${dataUrl}" alt="CMHS Ticket" />\n                    <div class="actions">\n                        <a class="button" href="${dataUrl}" download="${fileName}">Download Ticket</a>\n                    </div>\n                    <p class="hint">If nothing downloads automatically, use the button above to save.</p>\n                </div>\n            </body>\n        </html>\n    `);
+    previewWindow.document.close();
+    return true;
+};
+
 export default function EventsPage() {
     const [ticketData, setTicketData] = useState<TicketData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -220,6 +238,11 @@ export default function EventsPage() {
         if (!ticketRef.current) return;
         setIsDownloading(true);
 
+        const normalizedName = ticketData?.user?.name
+            ? ticketData.user.name.toLowerCase().replace(/\s+/g, '-')
+            : 'download';
+        const downloadFileName = `cmhs-grand-iftar-ticket-${normalizedName}.png`;
+
         // Detect iOS devices
         const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || 
                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -244,107 +267,16 @@ export default function EventsPage() {
             if (isIOS) {
                 const canvas = await createCanvas('normal');
                 const dataUrl = canvas.toDataURL('image/png', 1.0);
-                const newWindow = window.open('', '_blank');
-                
-                if (newWindow) {
-                    newWindow.document.write(`
-                        <!DOCTYPE html>
-                        <html>
-                            <head>
-                                <meta charset="UTF-8">
-                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                <title>Your Ticket - CMHS Grand Iftar</title>
-                                <style>
-                                    body {
-                                        margin: 0;
-                                        padding: 20px;
-                                        display: flex;
-                                        flex-direction: column;
-                                        align-items: center;
-                                        justify-content: center;
-                                        background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 100%);
-                                        color: white;
-                                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                                        min-height: 100vh;
-                                    }
-                                    .container {
-                                        max-width: 100%;
-                                        text-align: center;
-                                    }
-                                    h1 {
-                                        font-size: 24px;
-                                        margin-bottom: 10px;
-                                        color: #87CEEB;
-                                    }
-                                    p {
-                                        font-size: 16px;
-                                        margin: 15px 20px;
-                                        line-height: 1.6;
-                                        color: #e0e0e0;
-                                    }
-                                    .instructions {
-                                        background: rgba(255, 255, 255, 0.1);
-                                        border-radius: 12px;
-                                        padding: 20px;
-                                        margin: 20px 0;
-                                        border: 1px solid rgba(255, 255, 255, 0.2);
-                                    }
-                                    .step {
-                                        text-align: left;
-                                        margin: 10px 0;
-                                        padding-left: 10px;
-                                    }
-                                    img {
-                                        max-width: 100%;
-                                        height: auto;
-                                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-                                        border-radius: 12px;
-                                        margin: 20px 0;
-                                    }
-                                    .button {
-                                        margin-top: 20px;
-                                        padding: 12px 24px;
-                                        background: #5d3a7a;
-                                        border: none;
-                                        color: white;
-                                        border-radius: 8px;
-                                        font-size: 16px;
-                                        cursor: pointer;
-                                        transition: background 0.3s;
-                                    }
-                                    .button:hover {
-                                        background: #7a4d9e;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <div class="container">
-                                    <h1>🎫 Your CMHS Grand Iftar Ticket</h1>
-                                    <div class="instructions">
-                                        <p><strong>How to save your ticket on iPhone/iPad:</strong></p>
-                                        <div class="step">1️⃣ Tap and hold on the ticket image below</div>
-                                        <div class="step">2️⃣ Select "Save to Photos" or "Add to Photos"</div>
-                                        <div class="step">3️⃣ The ticket will be saved to your photo library</div>
-                                    </div>
-                                    <img src="${dataUrl}" alt="Your CMHS Grand Iftar Ticket" id="ticketImage">
-                                    <p style="font-size: 14px; opacity: 0.8; margin-top: 20px;">
-                                        টিকেটটি সংরক্ষণ করতে ছবিটির উপর চাপ দিয়ে ধরে রাখুন এবং "Save to Photos" নির্বাচন করুন
-                                    </p>
-                                    <button class="button" onclick="window.close()">Close</button>
-                                </div>
-                            </body>
-                        </html>
-                    `);
-                    newWindow.document.close();
-                } else {
-                    alert("Please enable popups for this site to download your ticket, or take a screenshot of the ticket on this page.");
+                const opened = openTicketPreviewTab(dataUrl, downloadFileName, { isIOS: true });
+                if (!opened) {
+                    alert("Please enable popups for this site to view or download your ticket.");
                 }
                 setIsDownloading(false);
                 return;
             }
 
             // For Android and other devices, use the download approach
-            const triggerDownload = (canvas: HTMLCanvasElement): Promise<void> => {
+            const triggerDownload = (canvas: HTMLCanvasElement, fileName: string): Promise<void> => {
                 return new Promise((resolve, reject) => {
                     canvas.toBlob((blob) => {
                         if (!blob) {
@@ -354,7 +286,7 @@ export default function EventsPage() {
                         const url = URL.createObjectURL(blob);
                         const link = document.createElement('a');
                         link.href = url;
-                        link.download = `cmhs-giftar-ticket-${ticketData?.user.name.toLowerCase().replace(/\s+/g, '-') || 'download'}.png`;
+                        link.download = fileName;
 
                         // Append to body for better mobile support
                         document.body.appendChild(link);
@@ -372,6 +304,7 @@ export default function EventsPage() {
 
             const modes: CaptureMode[] = ['normal', 'strip-url-layers', 'aggressive'];
             let lastError: unknown;
+            let previewOpened = false;
 
             for (const mode of modes) {
                 try {
@@ -379,7 +312,14 @@ export default function EventsPage() {
                     if (!isCanvasVisuallyValid(canvas)) {
                         throw new Error(`Canvas output is blank in mode "${mode}"`);
                     }
-                    await triggerDownload(canvas);
+                    const dataUrl = canvas.toDataURL('image/png', 1.0);
+                    if (!previewOpened) {
+                        previewOpened = openTicketPreviewTab(dataUrl, downloadFileName);
+                        if (!previewOpened) {
+                            console.warn('Popup blocked: unable to show manual ticket preview.');
+                        }
+                    }
+                    await triggerDownload(canvas, downloadFileName);
                     setIsDownloading(false);
                     return;
                 } catch (err) {
@@ -396,25 +336,8 @@ export default function EventsPage() {
             try {
                 const canvas = await createCanvas('aggressive');
                 const dataUrl = canvas.toDataURL('image/png');
-                const newWindow = window.open('', '_blank');
-                if (newWindow) {
-                    newWindow.document.write(`
-                        <!DOCTYPE html>
-                        <html>
-                            <head>
-                                <meta charset="UTF-8">
-                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                <title>Your Ticket - CMHS Grand Iftar</title>
-                            </head>
-                            <body style="margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#1a1a1a; color:white; font-family:sans-serif; min-height:100vh;">
-                                <p style="margin:20px; font-size:16px;">Your ticket is ready! Long press the image to save it.</p>
-                                <img src="${dataUrl}" style="max-width:100%; height:auto; box-shadow:0 10px 30px rgba(0,0,0,0.5); border-radius:12px;">
-                                <button onclick="window.close()" style="margin-top:20px; padding:10px 20px; background:#5d3a7a; border:none; color:white; border-radius:6px; cursor:pointer; font-size:16px;">Close</button>
-                            </body>
-                        </html>
-                    `);
-                    newWindow.document.close();
-                } else {
+                const opened = openTicketPreviewTab(dataUrl, downloadFileName);
+                if (!opened) {
                     alert("Ticket generated but popup was blocked. Please allow popups and try again, or take a screenshot.");
                 }
             } catch (fallbackErr) {
