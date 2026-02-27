@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import TicketCard from './_components/ticket-card';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
@@ -316,6 +316,7 @@ export default function EventsPage() {
     const [error, setError] = useState<string | null>(null);
     const [isDownloading, setIsDownloading] = useState(false);
     const [isServerDownloading, setIsServerDownloading] = useState(false);
+    const [platform, setPlatform] = useState<'ios' | 'android' | 'other'>('other');
     const ticketRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -338,6 +339,25 @@ export default function EventsPage() {
             }
         }
         fetchTicket();
+    }, []);
+
+    useLayoutEffect(() => {
+        if (typeof navigator === 'undefined') return;
+        const ua = navigator.userAgent || navigator.vendor || '';
+        const platformString = navigator.platform || '';
+        const isTouchMac = platformString === 'MacIntel' && navigator.maxTouchPoints > 1;
+
+        if (/iPad|iPhone|iPod/i.test(ua) || isTouchMac) {
+            setPlatform('ios');
+            return;
+        }
+
+        if (/Android/i.test(ua)) {
+            setPlatform('android');
+            return;
+        }
+
+        setPlatform('other');
     }, []);
 
     const downloadUrlToFile = (url: string, fileName: string) => {
@@ -380,8 +400,7 @@ export default function EventsPage() {
             : 'download';
         const downloadFileName = `cmhs-grand-iftar-ticket-${normalizedName}.png`;
 
-        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isIOS = platform === 'ios';
 
         const createCanvas = async (mode: CaptureMode) =>
             html2canvas(ticketRef.current!, {
@@ -498,6 +517,9 @@ export default function EventsPage() {
         return 'Modern CMHSIAN';
     };
 
+    const isIOSDevice = platform === 'ios';
+    const showClientDownload = !isIOSDevice;
+
     return (
         <div className="space-y-8">
             <div>
@@ -536,22 +558,24 @@ export default function EventsPage() {
                     </div>
                     <div className="text-center mt-6 space-y-3">
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <Button onClick={handleDownload} disabled={isDownloading}>
-                                {isDownloading ? (
-                                    <>
-                                        <svg className="animate-spin mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                                        </svg>
-                                        Preparing...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Download className="mr-2 h-5 w-5" />
-                                        Download Ticket
-                                    </>
-                                )}
-                            </Button>
+                            {showClientDownload && (
+                                <Button onClick={handleDownload} disabled={isDownloading}>
+                                    {isDownloading ? (
+                                        <>
+                                            <svg className="animate-spin mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                            </svg>
+                                            Preparing...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Download className="mr-2 h-5 w-5" />
+                                            Download Ticket
+                                        </>
+                                    )}
+                                </Button>
+                            )}
                             <Button variant="outline" onClick={handleServerDownload} disabled={isServerDownloading}>
                                 {isServerDownloading ? (
                                     <>
@@ -571,9 +595,14 @@ export default function EventsPage() {
                         </div>
                         <p className="text-sm text-muted-foreground">
                             <strong>Android users:</strong> Use Google Chrome browser for best results.<br />
-                            <strong>iPhone/iPad users:</strong> The ticket will open in a new tab. Tap and hold the image to save to Photos.<br />
+                            <strong>iPhone/iPad users:</strong> The Server Image button opens your ticket in a new tab. Tap and hold the image to save to Photos.<br />
                             টিকেট ডাউনলোড করার জন্য অপেক্ষা করুন। iPhone এ ছবিটি ধরে রেখে "Save to Photos" সিলেক্ট করুন।
                         </p>
+                        {isIOSDevice && (
+                            <p className="text-xs text-muted-foreground">
+                                For iOS reliability we only show the Server Image option—this guarantees the Cloudinary render matches the event design.
+                            </p>
+                        )}
                         <p className="text-xs text-muted-foreground">
                             Need the ultra-high resolution Cloudinary render? Use "Server Image" and the ticket will be generated directly by our backend.
                         </p>
