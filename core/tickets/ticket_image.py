@@ -133,14 +133,35 @@ def redraw_footer_layer(target_img, scale, left_text, left_bold_text, right_text
 # ── Font helpers ────────────────────────────────────────────────────
 FONT_CACHE_DIR = os.path.join(tempfile.gettempdir(), 'cmhs_ticket_fonts')
 
-GOOGLE_FONT_URLS = {
-    'PlayfairDisplay-Bold': 'https://github.com/google/fonts/raw/main/ofl/playfairdisplay/static/PlayfairDisplay-Bold.ttf',
-    'PlayfairDisplay-Black': 'https://github.com/google/fonts/raw/main/ofl/playfairdisplay/static/PlayfairDisplay-Black.ttf',
-    'PTSans-Regular': 'https://github.com/google/fonts/raw/main/ofl/ptsans/PTSans-Regular.ttf',
-    'PTSans-Bold': 'https://github.com/google/fonts/raw/main/ofl/ptsans/PTSans-Bold.ttf',
-    'CormorantGaramond-Regular': 'https://github.com/google/fonts/raw/main/ofl/cormorantgaramond/CormorantGaramond-Regular.ttf',
-    'CormorantGaramond-Italic': 'https://github.com/google/fonts/raw/main/ofl/cormorantgaramond/CormorantGaramond-Italic.ttf',
+FONT_VENDOR_BASE_URL = getattr(settings, 'TICKET_FONT_BASE_URL', None)
+
+FONT_FILE_NAMES = {
+    'PlayfairDisplay-Bold': 'PlayfairDisplay-Bold.ttf',
+    'PlayfairDisplay-Black': 'PlayfairDisplay-Black.ttf',
+    'PTSans-Regular': 'PTSans-Regular.ttf',
+    'PTSans-Bold': 'PTSans-Bold.ttf',
+    'CormorantGaramond-Regular': 'CormorantGaramond-Regular.ttf',
+    'CormorantGaramond-Italic': 'CormorantGaramond-Italic.ttf',
 }
+
+GOOGLE_FONT_URLS = {
+    'PlayfairDisplay-Bold': 'https://fonts.gstatic.com/s/playfairdisplay/v40/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKeiukDQ.ttf',
+    'PlayfairDisplay-Black': 'https://fonts.gstatic.com/s/playfairdisplay/v40/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKfsukDQ.ttf',
+    'PTSans-Regular': 'https://fonts.gstatic.com/s/ptsans/v18/jizaRExUiTo99u79P0U.ttf',
+    'PTSans-Bold': 'https://fonts.gstatic.com/s/ptsans/v18/jizfRExUiTo99u79B_mh4Ok.ttf',
+    'CormorantGaramond-Regular': 'https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_v86GnM.ttf',
+    'CormorantGaramond-Italic': 'https://fonts.gstatic.com/s/cormorantgaramond/v21/co3smX5slCNuHLi8bLeY9MK7whWMhyjYrGFEsdtdc62E6zd58jDOjw.ttf',
+}
+
+
+def _font_source_urls(name):
+    filename = FONT_FILE_NAMES.get(name)
+    if FONT_VENDOR_BASE_URL and filename:
+        base = FONT_VENDOR_BASE_URL.rstrip('/')
+        yield f"{base}/{filename}"
+    url = GOOGLE_FONT_URLS.get(name)
+    if url:
+        yield url
 
 
 def _download_font(name):
@@ -148,17 +169,16 @@ def _download_font(name):
     path = os.path.join(FONT_CACHE_DIR, f'{name}.ttf')
     if os.path.exists(path):
         return path
-    url = GOOGLE_FONT_URLS.get(name)
-    if not url:
-        return None
-    try:
-        resp = requests.get(url, timeout=15)
-        resp.raise_for_status()
-        with open(path, 'wb') as f:
-            f.write(resp.content)
-        return path
-    except Exception:
-        return None
+    for url in _font_source_urls(name):
+        try:
+            resp = requests.get(url, timeout=15)
+            resp.raise_for_status()
+            with open(path, 'wb') as f:
+                f.write(resp.content)
+            return path
+        except Exception:
+            continue
+    return None
 
 
 def get_font(name, size):

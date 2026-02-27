@@ -32,6 +32,8 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ["*"]
 
+TICKET_FONT_BASE_URL = os.getenv('TICKET_FONT_BASE_URL')
+
 
 # Application definition
 
