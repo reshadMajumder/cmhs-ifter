@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import TicketCard from "./_components/ticket-card";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import TicketCard from './_components/ticket-card';
+import { Button } from '@/components/ui/button';
+import { Download } from 'lucide-react';
 import { fetchWithAuth } from '@/lib/api';
 import { API_BASE_URL } from '@/lib/constants';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -199,7 +199,113 @@ const openTicketPreviewTab = (dataUrl: string, fileName: string, options?: { isI
         ? 'If the download button does not work, use the Share sheet after long pressing the image.'
         : 'If the automatic download does not start, use the Download Ticket button below.';
 
-    previewWindow.document.write(`\n        <!DOCTYPE html>\n        <html lang="en">\n            <head>\n                <meta charset="UTF-8" />\n                <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n                <title>Your CMHS Ticket</title>\n                <style>\n                    :root {\n                        color-scheme: dark;\n                    }\n                    body {\n                        margin: 0;\n                        min-height: 100vh;\n                        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;\n                        background: radial-gradient(circle at top, #2d1b4e, #0f0f18 70%);\n                        display: flex;\n                        align-items: center;\n                        justify-content: center;\n                        padding: 32px;\n                        color: #f1f5f9;\n                    }\n                    .wrapper {\n                        width: min(920px, 100%);\n                        display: flex;\n                        flex-direction: column;\n                        align-items: center;\n                        gap: 24px;\n                        text-align: center;\n                    }\n                    img {\n                        width: 100%;\n                        height: auto;\n                        border-radius: 20px;\n                        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);\n                    }\n                    .instructions {\n                        font-size: 15px;\n                        line-height: 1.6;\n                        opacity: 0.85;\n                    }\n                    .actions {\n                        display: flex;\n                        gap: 12px;\n                        flex-wrap: wrap;\n                        justify-content: center;\n                    }\n                    a.button {\n                        display: inline-flex;\n                        align-items: center;\n                        justify-content: center;\n                        padding: 12px 24px;\n                        border-radius: 999px;\n                        background: linear-gradient(120deg, #5d3a7a, #7c4d99);\n                        color: white;\n                        text-decoration: none;\n                        font-weight: 600;\n                        box-shadow: 0 10px 25px rgba(93, 58, 122, 0.4);\n                    }\n                    .hint {\n                        font-size: 13px;\n                        opacity: 0.7;\n                    }\n                </style>\n            </head>\n            <body>\n                <div class="wrapper">\n                    <h1 style="margin:0;font-size:26px;letter-spacing:0.08em;text-transform:uppercase;color:#bae6fd;">CMHS Grand Iftar Ticket</h1>\n                    <p class="instructions">${primaryInstruction}<br/>${secondaryInstruction}</p>\n                    <img src="${dataUrl}" alt="CMHS Ticket" />\n                    <div class="actions">\n                        <a class="button" href="${dataUrl}" download="${fileName}">Download Ticket</a>\n                    </div>\n                    <p class="hint">If nothing downloads automatically, use the button above to save.</p>\n                </div>\n            </body>\n        </html>\n    `);
+    previewWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Your CMHS Ticket</title>
+                <style>
+                    :root {
+                        color-scheme: dark;
+                    }
+                    body {
+                        margin: 0;
+                        min-height: 100vh;
+                        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+                        background: radial-gradient(circle at top, #2d1b4e, #0f0f18 70%);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 32px;
+                        color: #f1f5f9;
+                    }
+                    .wrapper {
+                        width: min(920px, 100%);
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 24px;
+                        text-align: center;
+                    }
+                    img {
+                        width: 100%;
+                        height: auto;
+                        border-radius: 20px;
+                        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+                    }
+                    .instructions {
+                        font-size: 15px;
+                        line-height: 1.6;
+                        opacity: 0.85;
+                    }
+                    .actions {
+                        display: flex;
+                        gap: 12px;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                    }
+                    a.button {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 12px 24px;
+                        border-radius: 999px;
+                        background: linear-gradient(120deg, #5d3a7a, #7c4d99);
+                        color: white;
+                        text-decoration: none;
+                        font-weight: 600;
+                        box-shadow: 0 10px 25px rgba(93, 58, 122, 0.4);
+                    }
+                    .hint {
+                        font-size: 13px;
+                        opacity: 0.7;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="wrapper">
+                    <h1 style="margin:0;font-size:26px;letter-spacing:0.08em;text-transform:uppercase;color:#bae6fd;">CMHS Grand Iftar Ticket</h1>
+                    <p class="instructions">${primaryInstruction}<br/>${secondaryInstruction}</p>
+                    <img id="ticketImage" alt="CMHS Ticket" />
+                    <div class="actions">
+                        <a id="downloadLink" class="button" href="#">Download Ticket</a>
+                    </div>
+                    <p class="hint">If nothing downloads automatically, use the button above to save.</p>
+                </div>
+                <script>
+                    const dataUrl = ${JSON.stringify(dataUrl)};
+                    const fileName = ${JSON.stringify(fileName)};
+                    const imgEl = document.getElementById('ticketImage');
+                    const linkEl = document.getElementById('downloadLink');
+                    const hydrate = async () => {
+                        try {
+                            const response = await fetch(dataUrl);
+                            const blob = await response.blob();
+                            const objectUrl = URL.createObjectURL(blob);
+                            imgEl.src = objectUrl;
+                            imgEl.dataset.objectUrl = objectUrl;
+                            linkEl.href = objectUrl;
+                            linkEl.download = fileName;
+                        } catch (err) {
+                            console.error('Preview hydration failed:', err);
+                            imgEl.src = dataUrl;
+                            linkEl.href = dataUrl;
+                            linkEl.download = fileName;
+                        }
+                    };
+                    hydrate();
+                    window.addEventListener('beforeunload', () => {
+                        const url = imgEl?.dataset?.objectUrl;
+                        if (url) {
+                            URL.revokeObjectURL(url);
+                        }
+                    });
+                </script>
+            </body>
+        </html>
+    `);
     previewWindow.document.close();
     return true;
 };
@@ -217,7 +323,7 @@ export default function EventsPage() {
             try {
                 const response = await fetchWithAuth(`${API_BASE_URL}/api/ticket/my-ticket/`);
                 if (response.status === 404) {
-                    setError("No ticket found for this user. Please complete your registration payment.");
+                    setError('No ticket found for this user. Please complete your registration payment.');
                     return;
                 }
                 if (!response.ok) {
@@ -234,6 +340,37 @@ export default function EventsPage() {
         fetchTicket();
     }, []);
 
+    const downloadUrlToFile = (url: string, fileName: string) => {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.rel = 'noopener';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const requestServerTicketImage = async () => {
+        const response = await fetchWithAuth(`${API_BASE_URL}/api/ticket/generate-image/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to request server-rendered ticket.');
+        }
+
+        const data = await response.json();
+        if (!data?.image_url) {
+            throw new Error('Ticket image URL not found in response.');
+        }
+
+        return data as { image_url: string; ticket_code?: string };
+    };
+
     const handleDownload = async () => {
         if (!ticketRef.current) return;
         setIsDownloading(true);
@@ -243,9 +380,8 @@ export default function EventsPage() {
             : 'download';
         const downloadFileName = `cmhs-grand-iftar-ticket-${normalizedName}.png`;
 
-        // Detect iOS devices
-        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || 
-                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
         const createCanvas = async (mode: CaptureMode) =>
             html2canvas(ticketRef.current!, {
@@ -260,47 +396,43 @@ export default function EventsPage() {
                 onclone: (clonedDoc) => sanitizeClonedTicket(clonedDoc, mode),
             });
 
-        try {
-            await waitForTicketImages(ticketRef.current);
+        const triggerDownload = (canvas: HTMLCanvasElement, fileName: string): Promise<void> => {
+            return new Promise((resolve, reject) => {
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        reject(new Error('Canvas to Blob conversion failed'));
+                        return;
+                    }
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = fileName;
 
-            // For iOS devices, directly open in new tab
+                    document.body.appendChild(link);
+                    link.click();
+
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                        resolve();
+                    }, 200);
+                }, 'image/png', 1.0);
+            });
+        };
+
+        try {
             if (isIOS) {
-                const canvas = await createCanvas('normal');
-                const dataUrl = canvas.toDataURL('image/png', 1.0);
-                const opened = openTicketPreviewTab(dataUrl, downloadFileName, { isIOS: true });
+                const serverAsset = await requestServerTicketImage();
+                const iosFileName = `cmhs-grand-iftar-ticket-${serverAsset.ticket_code || normalizedName}.png`;
+                const opened = openTicketPreviewTab(serverAsset.image_url, iosFileName, { isIOS: true });
                 if (!opened) {
-                    alert("Please enable popups for this site to view or download your ticket.");
+                    alert('Please enable popups for this site to view or download your ticket.');
                 }
-                setIsDownloading(false);
+                downloadUrlToFile(serverAsset.image_url, iosFileName);
                 return;
             }
 
-            // For Android and other devices, use the download approach
-            const triggerDownload = (canvas: HTMLCanvasElement, fileName: string): Promise<void> => {
-                return new Promise((resolve, reject) => {
-                    canvas.toBlob((blob) => {
-                        if (!blob) {
-                            reject(new Error('Canvas to Blob conversion failed'));
-                            return;
-                        }
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = fileName;
-
-                        // Append to body for better mobile support
-                        document.body.appendChild(link);
-                        link.click();
-
-                        // Cleanup
-                        setTimeout(() => {
-                            document.body.removeChild(link);
-                            URL.revokeObjectURL(url);
-                            resolve();
-                        }, 200);
-                    }, 'image/png', 1.0);
-                });
-            };
+            await waitForTicketImages(ticketRef.current);
 
             const modes: CaptureMode[] = ['normal', 'strip-url-layers', 'aggressive'];
             let lastError: unknown;
@@ -320,30 +452,27 @@ export default function EventsPage() {
                         }
                     }
                     await triggerDownload(canvas, downloadFileName);
-                    setIsDownloading(false);
                     return;
                 } catch (err) {
                     lastError = err;
                 }
             }
 
-            // If it reached here, it means all modes failed in the loop
             throw lastError || new Error('All download attempts failed');
-
         } catch (err) {
-            // If all modes fail, try one last direct-to-new-tab fallback
             console.error('Ticket download failed, trying fallback:', err);
             try {
                 const canvas = await createCanvas('aggressive');
                 const dataUrl = canvas.toDataURL('image/png');
                 const opened = openTicketPreviewTab(dataUrl, downloadFileName);
                 if (!opened) {
-                    alert("Ticket generated but popup was blocked. Please allow popups and try again, or take a screenshot.");
+                    alert('Ticket generated but popup was blocked. Please allow popups and try again, or take a screenshot.');
                 }
             } catch (fallbackErr) {
                 console.error('Fallback also failed:', fallbackErr);
                 alert("Sorry, we couldn't generate the ticket for download. Please try taking a screenshot of the ticket on your screen.");
             }
+        } finally {
             setIsDownloading(false);
         }
     };
@@ -351,36 +480,9 @@ export default function EventsPage() {
     const handleServerDownload = async () => {
         setIsServerDownloading(true);
         try {
-            const response = await fetchWithAuth(`${API_BASE_URL}/api/ticket/generate-image/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({}),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to request server-rendered ticket.');
-            }
-
-            const data = await response.json();
-            if (!data?.image_url) {
-                throw new Error('Ticket image URL not found in response.');
-            }
-
-            const imageUrl: string = data.image_url;
+            const data = await requestServerTicketImage();
             const filename = `cmhs-grand-iftar-ticket-${data.ticket_code || ticketData?.ticket_code || 'image'}.png`;
-
-            const link = document.createElement('a');
-            link.href = imageUrl;
-            link.download = filename;
-            link.rel = 'noopener';
-            link.target = '_blank';
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
+            downloadUrlToFile(data.image_url, filename);
         } catch (error) {
             console.error(error);
             alert(error instanceof Error ? error.message : 'Could not download ticket from server.');
@@ -392,10 +494,9 @@ export default function EventsPage() {
     const getTicketTypeForCard = (batchStr: string) => {
         const batch = parseInt(batchStr);
         if (isNaN(batch)) return 'Modern CMHSIAN';
-        // Senior if batch <= 2012
         if (batch <= 2012) return 'Vintage CMHSIAN';
         return 'Modern CMHSIAN';
-    }
+    };
 
     return (
         <div className="space-y-8">
@@ -451,7 +552,7 @@ export default function EventsPage() {
                                     </>
                                 )}
                             </Button>
-                            {/* <Button variant="outline" onClick={handleServerDownload} disabled={isServerDownloading}>
+                            <Button variant="outline" onClick={handleServerDownload} disabled={isServerDownloading}>
                                 {isServerDownloading ? (
                                     <>
                                         <svg className="animate-spin mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -466,7 +567,7 @@ export default function EventsPage() {
                                         Server Image
                                     </>
                                 )}
-                            </Button> */}
+                            </Button>
                         </div>
                         <p className="text-sm text-muted-foreground">
                             <strong>Android users:</strong> Use Google Chrome browser for best results.<br />
@@ -480,5 +581,5 @@ export default function EventsPage() {
                 </div>
             ) : null}
         </div>
-    )
+    );
 }
