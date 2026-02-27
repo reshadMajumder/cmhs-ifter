@@ -298,7 +298,9 @@ CSRF_COOKIE_SECURE = True
 
 
 CSRF_TRUSTED_ORIGINS = [
-        "https://cmhs-ifter-api.vercel.app",
+    "https://cmhs-ifter-api.vercel.app",
+    "https://cmhs-ifter-production.up.railway.app",
+
     ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -306,7 +308,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "https://cmhs-ifter.vercel.app",
     "https://iftar.cmhsians.com",
-    "https://cmhs-ifter-production.up.railway.app",
     
 
 ]
