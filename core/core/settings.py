@@ -70,6 +70,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
@@ -300,7 +303,6 @@ else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
 
-    
 
 CSRF_TRUSTED_ORIGINS = [
     "https://cmhs-ifter-api.vercel.app",
