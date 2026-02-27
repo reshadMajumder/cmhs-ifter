@@ -59,8 +59,8 @@ yarn.lock
 # **/migrations/
 # keep migration and its __init__.py but ignore others
 # Django migrations (keep __init__.py)
-**/migrations/*.py
-!**/migrations/__init__.py
-**/migrations/*.pyc
+# **/migrations/*.py
+# !**/migrations/__init__.py
+# **/migrations/*.pyc
 .env
 
