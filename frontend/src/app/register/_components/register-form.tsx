@@ -39,7 +39,7 @@ const registerFormSchema = z.object({
   profile_image: z.any().optional(),
   phone: z.string().min(11, { message: 'Please enter a valid phone number.' }),
   profession: z.string().min(2, { message: 'Profession is required.' }),
-  batch: z.coerce.number().int().min(1998, 'Batch year must be 1998 or later.').max(2026, 'Batch year must be 2026 or earlier.'),
+  batch: z.coerce.number().int().min(1998, 'Batch year must be 1998 or later.').max(2028, 'Batch year must be 2028 or earlier.'),
   subject: z.enum(['science', 'commerce', 'humanities', 'none'], { required_error: 'Please select your subject.' }),
   religion: z.string().optional(),
   gender: z.enum(['male', 'female', 'other'], { required_error: 'Please select a gender.' }),
@@ -51,7 +51,7 @@ const registerFormSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
-const batchYears = Array.from({ length: 2026 - 1998 + 1 }, (_, i) => String(1998 + i)).reverse();
+const batchYears = Array.from({ length: 2028 - 1998 + 1 }, (_, i) => String(1998 + i)).reverse();
 
 
 export default function RegisterForm() {
