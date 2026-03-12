@@ -76,13 +76,13 @@ export default function PaymentStatus({ payments, profile }: PaymentStatusProps)
                 <div className="bg-muted/50 p-6 rounded-2xl border text-sm space-y-6">
                     <div className="flex items-center gap-2 text-primary font-bold">
                         <CreditCard className="h-5 w-5" />
-                        <span className="text-lg">How to Pay (bKash)</span>
+                        <span className="text-lg">How to Pay (bKash / Nagad)</span>
                     </div>
 
                     <div className="space-y-5 text-muted-foreground">
                         <p className="flex items-start gap-3">
                             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs ring-1 ring-primary/20">1</span>
-                            <span>Open bKash App and select <span className="font-bold text-foreground text-primary">"Send Money"</span></span>
+                            <span>Open bKash/Nagad App and select <span className="font-bold text-foreground text-primary">"Send Money"</span></span>
                         </p>
 
                         <div className="space-y-3">

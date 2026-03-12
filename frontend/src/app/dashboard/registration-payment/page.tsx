@@ -21,8 +21,8 @@ import Image from 'next/image';
 
 const paymentSchema = z.object({
     transaction_id: z.string().min(1, 'Transaction ID is required.'),
-    method: z.literal('bkash', {
-        errorMap: () => ({ message: "Please select bKash as the payment method." }),
+    method: z.enum(['bkash', 'nagad'], {
+        errorMap: () => ({ message: "Please select a payment method." }),
     }),
     phone: z.string().min(1, 'Phone number is required.'),
 });
@@ -130,14 +130,16 @@ function RegistrationPaymentPageContent() {
                     <div className="mb-6 p-4 bg-muted rounded-lg text-sm space-y-4">
                         <p className="font-bold">Payment Instructions:</p>
                         <ol className="list-decimal list-inside space-y-3">
-                            <li>Open your bKash App and select <span className="font-bold text-foreground">"Send Money"</span>.</li>
+                            <li>Open your bKash/Nagad App and select <span className="font-bold text-foreground">"Send Money"</span>.</li>
                             <li>
-                                <span >Enter any of the following Phone number:</span>
-                                <CopyableText text="+8801851070809" />
-                                <CopyableText text="+8801938485079" />
+                                <span >Enter any of the following phone numbers (both support bKash and Nagad):</span>
+                                <div className="mt-2 space-y-1">
+                                    <CopyableText text="+8801851070809" />
+                                    <CopyableText text="+8801938485079" />
+                                </div>
                             </li>
                             <li>
-                                <span >Enter the amount:</span> <span className="font-bold text-bkash">{Number(amount).toLocaleString()}tk</span>
+                                <span >Enter the amount:</span> <span className="font-bold text-primary">{Number(amount).toLocaleString()}tk</span>
                             </li>
                             <li>Complete the payment and copy the Transaction ID (TrxID).</li>
                         </ol>
@@ -149,7 +151,7 @@ function RegistrationPaymentPageContent() {
                                 name="phone"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Your bKash Phone Number</FormLabel>
+                                        <FormLabel>Your Transaction Phone Number</FormLabel>
                                         <FormControl>
                                             <Input placeholder="The number you paid from" {...field} />
                                         </FormControl>
@@ -171,6 +173,7 @@ function RegistrationPaymentPageContent() {
                                             </FormControl>
                                             <SelectContent>
                                                 <SelectItem value="bkash">bKash</SelectItem>
+                                                <SelectItem value="nagad">Nagad</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -184,7 +187,7 @@ function RegistrationPaymentPageContent() {
                                     <FormItem>
                                         <FormLabel>Transaction ID (TrxID)</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter the TrxID from your bKash message" {...field} />
+                                            <Input placeholder="Enter the TrxID from your payment confirmation" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
