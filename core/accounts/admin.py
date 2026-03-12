@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 import requests
 from django.http import HttpResponse
 from django.contrib import admin, messages
+from django.db.models import Q, Exists, OuterRef
 from .models import User
 from django.utils.text import slugify
 
@@ -136,12 +137,35 @@ def download_user_images(modeladmin, request, queryset):
 download_user_images.short_description = "Download selected user images"
 
 
+class PaymentApprovedFilter(admin.SimpleListFilter):
+    title = 'payment approved'
+    parameter_name = 'payment_approved'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', 'Has Approved Payment'),
+            ('no', 'No Approved Payment'),
+        )
+
+    def queryset(self, request, queryset):
+        from payments.models import Payment
+        if self.value() == 'yes':
+            return queryset.filter(
+                Exists(Payment.objects.filter(user=OuterRef('pk'), payment_approved=True))
+            )
+        if self.value() == 'no':
+            return queryset.exclude(
+                Exists(Payment.objects.filter(user=OuterRef('pk'), payment_approved=True))
+            )
+        return queryset
+
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         'phone', 'name', 'batch', 'gender', 'is_staff', 'is_active', 'date_joined'
     )
     search_fields = ('phone', 'name')
-    list_filter = ('batch', 'gender', 'is_staff', 'is_active')
+    list_filter = (PaymentApprovedFilter, 'batch', 'gender', 'is_staff', 'is_active')
     ordering = ('-date_joined',)
     actions = [export_users_csv, download_user_images]
