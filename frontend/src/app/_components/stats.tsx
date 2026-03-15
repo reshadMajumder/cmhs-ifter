@@ -12,6 +12,8 @@ import { cn } from '@/lib/utils';
 const totalCapacity = 1000;
 const INITIAL_VISIBLE_COUNT = 12;
 const EXTRA_PER_BATCH = 3;
+const ADDITIONAL_EXTRA_PER_BATCH = 3;
+const EXCLUDED_BATCH_FOR_ADDITIONAL_EXTRA = '1998';
 
 interface RegistrationStats {
   total_registered: number;
@@ -53,14 +55,16 @@ export default function Stats() {
 
   const adjustedBatchData = batchData.map((batch) => ({
     ...batch,
-    count: batch.count + EXTRA_PER_BATCH,
+    count: batch.count + EXTRA_PER_BATCH + (batch.name === EXCLUDED_BATCH_FOR_ADDITIONAL_EXTRA ? 0 : ADDITIONAL_EXTRA_PER_BATCH),
   }));
 
-  const totalExtra = batchData.length * EXTRA_PER_BATCH;
+  const additionalExtraBatchCount = batchData.filter(
+    (batch) => batch.name !== EXCLUDED_BATCH_FOR_ADDITIONAL_EXTRA,
+  ).length;
+  const totalExtra = (batchData.length * EXTRA_PER_BATCH) + (additionalExtraBatchCount * ADDITIONAL_EXTRA_PER_BATCH);
   const adjustedTotalRegistered = stats ? stats.total_registered + totalExtra : 0;
-  const thirdOfExtra = totalExtra / 3;
-  const maleExtra = thirdOfExtra * 2;
-  const femaleExtra = thirdOfExtra;
+  const maleExtra = Math.round((totalExtra * 2) / 3);
+  const femaleExtra = totalExtra - maleExtra;
   const adjustedMaleCount = stats ? (stats.gender_count.male || 0) + maleExtra : 0;
   const adjustedFemaleCount = stats ? (stats.gender_count.female || 0) + femaleExtra : 0;
 
