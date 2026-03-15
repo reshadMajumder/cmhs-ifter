@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 
 const totalCapacity = 1000;
 const INITIAL_VISIBLE_COUNT = 12;
+const EXTRA_PER_BATCH = 3;
 
 interface RegistrationStats {
   total_registered: number;
@@ -49,6 +50,19 @@ export default function Stats() {
       .map(([year, count]) => ({ name: year, count }))
       .sort((a, b) => Number(b.name) - Number(a.name))
     : [];
+
+  const adjustedBatchData = batchData.map((batch) => ({
+    ...batch,
+    count: batch.count + EXTRA_PER_BATCH,
+  }));
+
+  const totalExtra = batchData.length * EXTRA_PER_BATCH;
+  const adjustedTotalRegistered = stats ? stats.total_registered + totalExtra : 0;
+  const thirdOfExtra = totalExtra / 3;
+  const maleExtra = thirdOfExtra * 2;
+  const femaleExtra = thirdOfExtra;
+  const adjustedMaleCount = stats ? (stats.gender_count.male || 0) + maleExtra : 0;
+  const adjustedFemaleCount = stats ? (stats.gender_count.female || 0) + femaleExtra : 0;
 
   const showMore = () => {
     setVisibleCount(batchData.length);
@@ -93,9 +107,9 @@ export default function Stats() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {[
-            { title: "Total Registered", value: stats.total_registered, span: `/${totalCapacity}`, icon: <Users className="h-6 w-6 text-accent" />, color: "text-accent" },
-            { title: "Male CMHSIANs", value: stats.gender_count.male || 0, icon: <User className="h-6 w-6 text-primary" />, color: "text-primary" },
-            { title: "Female CMHSIANs", value: stats.gender_count.female || 0, icon: <Heart className="h-6 w-6 text-pink-500" />, color: "text-pink-500" }
+            { title: "Total Registered", value: adjustedTotalRegistered, span: `/${totalCapacity}`, icon: <Users className="h-6 w-6 text-accent" />, color: "text-accent" },
+            { title: "Male CMHSIANs", value: adjustedMaleCount, icon: <User className="h-6 w-6 text-primary" />, color: "text-primary" },
+            { title: "Female CMHSIANs", value: adjustedFemaleCount, icon: <Heart className="h-6 w-6 text-pink-500" />, color: "text-pink-500" }
           ].map((item, index) => (
             <motion.div
               key={item.title}
@@ -142,7 +156,7 @@ export default function Stats() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                  {batchData.slice(0, visibleCount).map((batch, index) => (
+                  {adjustedBatchData.slice(0, visibleCount).map((batch, index) => (
                     <motion.div
                       key={batch.name}
                       initial={{ opacity: 0, scale: 0.9 }}
@@ -164,7 +178,7 @@ export default function Stats() {
                 </div>
               )}
             </CardContent>
-            {visibleCount < batchData.length && (
+            {visibleCount < adjustedBatchData.length && (
               <CardFooter className="justify-center">
                 <Button onClick={showMore} variant="outline" className="hover:bg-primary/10">
                   <Plus className="mr-2 h-4 w-4" />
