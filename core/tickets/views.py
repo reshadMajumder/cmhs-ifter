@@ -9,8 +9,11 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .models import Ticket
 from .serializers import TicketSerializer
+from accounts.models import User
+from payments.models import Payment
 from .ticket_engine import render_ticket_html
 from .ticket_image import render_ticket_image
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
 class UserTicketView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -98,3 +101,191 @@ class CreateTicketAndUploadCloudinary(APIView):
                 {"detail": f"Error generating ticket image: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+class CheckEntranceByQRView(APIView):
+    """
+    Check entrance by scanning ticket QR code.
+    Endpoint: GET /api/tickets/check-entrance/<ticket_code>/
+    Returns ticket details if valid
+    """
+    permission_classes = [IsAdminUser,IsAuthenticated]
+
+    def get(self, request, ticket_code):
+        try:
+            ticket = Ticket.objects.get(ticket_code=ticket_code)
+            serializer = TicketSerializer(ticket)
+            return Response(
+                {
+                    "status": "valid",
+                    "message": "Ticket is valid",
+                    "ticket": serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        except Ticket.DoesNotExist:
+            return Response(
+                {
+                    "status": "invalid",
+                    "detail": "Ticket not found"
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class MarkFoodReceivedView(APIView):
+    """
+    Mark food as received for a ticket by scanning QR code.
+    Endpoint: POST /api/tickets/mark-food-received/<ticket_code>/
+    Sets food_received to True
+    """
+    permission_classes = [IsAdminUser, IsAuthenticated]
+
+    def post(self, request, ticket_code):
+        try:
+            ticket = Ticket.objects.get(ticket_code=ticket_code)
+            if ticket.food_received:
+                return Response(
+                    {
+                        "status": "already_marked",
+                        "message": "Food has already been marked as received for this ticket",
+                        "ticket_code": ticket.ticket_code
+                    },
+                    status=status.HTTP_200_OK
+                )
+            else:
+                ticket.food_received = True
+                ticket.save()
+                serializer = TicketSerializer(ticket)
+                return Response(
+                    {
+                        "status": "success",
+                        "message": "Food marked as received",
+                        "ticket": serializer.data
+                    },
+                    status=status.HTTP_200_OK
+                )
+        except Ticket.DoesNotExist:
+            return Response(
+                {
+                    "status": "error",
+                    "detail": "Ticket not found"
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {
+                    "status": "error",
+                    "detail": str(e)
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class CheckEntranceByPhoneView(APIView):
+    """
+    Backup entrance check by user phone number.
+    Verifies user has an approved registration payment and a ticket.
+    Endpoint: GET /api/tickets/check-entrance-phone/<phone>/
+    """
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, phone):
+        try:
+            user = User.objects.get(phone=phone)
+        except User.DoesNotExist:
+            return Response(
+                {"status": "invalid", "detail": "No user found with this phone number"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        has_approved_payment = Payment.objects.filter(
+            user=user,
+            payment_type='registration',
+            payment_approved=True
+        ).exists()
+
+        if not has_approved_payment:
+            return Response(
+                {"status": "invalid", "detail": "No approved registration payment found for this user"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        try:
+            ticket = Ticket.objects.get(user=user)
+            serializer = TicketSerializer(ticket)
+            return Response(
+                {
+                    "status": "valid",
+                    "message": "User has a valid ticket",
+                    "ticket": serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        except Ticket.DoesNotExist:
+            return Response(
+                {"status": "invalid", "detail": "No ticket found for this user"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class MarkFoodReceivedByPhoneView(APIView):
+    """
+    Backup food received marking by user phone number.
+    Verifies user has an approved registration payment before marking.
+    Endpoint: POST /api/tickets/mark-food-received-phone/<phone>/
+    """
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, phone):
+        try:
+            user = User.objects.get(phone=phone)
+        except User.DoesNotExist:
+            return Response(
+                {"status": "error", "detail": "No user found with this phone number"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        has_approved_payment = Payment.objects.filter(
+            user=user,
+            payment_type='registration',
+            payment_approved=True
+        ).exists()
+
+        if not has_approved_payment:
+            return Response(
+                {"status": "error", "detail": "No approved registration payment found for this user"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        try:
+            ticket = Ticket.objects.get(user=user)
+        except Ticket.DoesNotExist:
+            return Response(
+                {"status": "error", "detail": "No ticket found for this user"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        if ticket.food_received:
+            return Response(
+                {
+                    "status": "already_marked",
+                    "message": "Food has already been marked as received for this user",
+                    "ticket_code": ticket.ticket_code
+                },
+                status=status.HTTP_200_OK
+            )
+
+        ticket.food_received = True
+        ticket.save()
+        serializer = TicketSerializer(ticket)
+        return Response(
+            {
+                "status": "success",
+                "message": "Food marked as received",
+                "ticket": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+
