@@ -109,7 +109,7 @@ class CheckEntranceByQRView(APIView):
     Endpoint: GET /api/tickets/check-entrance/<ticket_code>/
     Returns ticket details if valid
     """
-    permission_classes = [IsAdminUser,IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def get(self, request, ticket_code):
         try:
@@ -139,7 +139,7 @@ class MarkFoodReceivedView(APIView):
     Endpoint: POST /api/tickets/mark-food-received/<ticket_code>/
     Sets food_received to True
     """
-    permission_classes = [IsAdminUser, IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def post(self, request, ticket_code):
         try:

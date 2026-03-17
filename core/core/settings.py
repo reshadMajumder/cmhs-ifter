@@ -317,6 +317,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "https://cmhs-ifter.vercel.app",
     "https://iftar.cmhsians.com",
+    "https://6000-firebase-studio-1773731116203.cluster-bqwaigqtxbeautecnatk4o6ynk.cloudworkstations.dev",
     
 
 ]
