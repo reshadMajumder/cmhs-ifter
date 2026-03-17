@@ -309,6 +309,7 @@ else:
 CSRF_TRUSTED_ORIGINS = [
     "https://cmhs-ifter-api.vercel.app",
     "https://cmhs-ifter-production.up.railway.app",
+    
 
     ]
 
@@ -317,7 +318,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "https://cmhs-ifter.vercel.app",
     "https://iftar.cmhsians.com",
-    "https://6000-firebase-studio-1773731116203.cluster-bqwaigqtxbeautecnatk4o6ynk.cloudworkstations.dev",
+    # "https://6000-firebase-studio-1773731116203.cluster-bqwaigqtxbeautecnatk4o6ynk.cloudworkstations.dev",
+    "https://cmhs-ticket-check.vercel.app",
+    "https://ticket.cmhsians.com",
     
 
 ]
