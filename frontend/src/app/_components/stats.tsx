@@ -14,6 +14,8 @@ const INITIAL_VISIBLE_COUNT = 12;
 const EXTRA_PER_BATCH = 3;
 const ADDITIONAL_EXTRA_PER_BATCH = 3;
 const EXCLUDED_BATCH_FOR_ADDITIONAL_EXTRA = '1998';
+const EXTRA_BATCH_YEAR = '2019';
+const EXTRA_FOR_BATCH_YEAR = 3;
 
 interface RegistrationStats {
   total_registered: number;
@@ -55,13 +57,19 @@ export default function Stats() {
 
   const adjustedBatchData = batchData.map((batch) => ({
     ...batch,
-    count: batch.count + EXTRA_PER_BATCH + (batch.name === EXCLUDED_BATCH_FOR_ADDITIONAL_EXTRA ? 0 : ADDITIONAL_EXTRA_PER_BATCH),
+    count: batch.count
+      + EXTRA_PER_BATCH
+      + (batch.name === EXCLUDED_BATCH_FOR_ADDITIONAL_EXTRA ? 0 : ADDITIONAL_EXTRA_PER_BATCH)
+      + (batch.name === EXTRA_BATCH_YEAR ? EXTRA_FOR_BATCH_YEAR : 0),
   }));
 
   const additionalExtraBatchCount = batchData.filter(
     (batch) => batch.name !== EXCLUDED_BATCH_FOR_ADDITIONAL_EXTRA,
   ).length;
-  const totalExtra = (batchData.length * EXTRA_PER_BATCH) + (additionalExtraBatchCount * ADDITIONAL_EXTRA_PER_BATCH);
+  const totalExtra =
+    (batchData.length * EXTRA_PER_BATCH)
+    + (additionalExtraBatchCount * ADDITIONAL_EXTRA_PER_BATCH)
+    + (batchData.some((batch) => batch.name === EXTRA_BATCH_YEAR) ? EXTRA_FOR_BATCH_YEAR : 0);
   const adjustedTotalRegistered = stats ? stats.total_registered + totalExtra : 0;
   const maleExtra = Math.round((totalExtra * 2) / 3);
   const femaleExtra = totalExtra - maleExtra;
