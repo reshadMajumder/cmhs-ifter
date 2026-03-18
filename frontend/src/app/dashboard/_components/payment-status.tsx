@@ -133,11 +133,11 @@ export default function PaymentStatus({ payments, profile }: PaymentStatusProps)
                 </div>
 
                 <div className="flex flex-col gap-3">
-                    <Button asChild size="lg" className="w-full font-bold shadow-lg shadow-primary/20">
-                        <Link href={`/dashboard/registration-payment?amount=${registrationFee}`}>
+                   {/* <Button asChild size="lg" className="w-full font-bold shadow-lg shadow-primary/20">
+                         <Link href={`/dashboard/registration-payment?amount=${registrationFee}`}>
                             Confirm My Payment
-                        </Link>
-                    </Button>
+                        </Link> 
+                    </Button> */}
                     <p className="text-[12px] text-red-600 font-bold text-center leading-tight">
                         Note: Wait till the payment is approved. After we check your Transaction ID and match, we will approve and your ticket will auto-generate. Until then, have patience.
                     </p>
