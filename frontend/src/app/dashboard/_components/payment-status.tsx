@@ -138,6 +138,7 @@ export default function PaymentStatus({ payments, profile }: PaymentStatusProps)
                             Confirm My Payment
                         </Link> 
                     </Button> */}
+                    <h1> Registration closed </h1>
                     <p className="text-[12px] text-red-600 font-bold text-center leading-tight">
                         Note: Wait till the payment is approved. After we check your Transaction ID and match, we will approve and your ticket will auto-generate. Until then, have patience.
                     </p>
